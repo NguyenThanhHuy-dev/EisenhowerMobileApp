@@ -11,29 +11,34 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
-
+val LightBlue = Color(0xFFADD8E6) // Light blue
+val DarkBlue = Color(0xFF00008B) // Dark blue
+val LightGray = Color(0xFFF0F0F0) // Light gray
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
-)
-
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40,
-//    background = Color(0xFFF0F8FF),
-    surface = Color(0xFFF0F8FF)
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
+    primary = DarkBlue,
+    secondary = DarkBlue,
+    tertiary = DarkBlue,
+    background = LightGray,
+    surface = LightGray,
     onPrimary = Color.White,
     onSecondary = Color.White,
     onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    onBackground = Color.White,
+    onSurface = Color.White
+)
+
+private val LightColorScheme = lightColorScheme(
+    primary = LightBlue,
+    secondary = LightBlue,
+    tertiary = LightBlue,
+    background = LightGray,
+    surface = LightGray,
+    onPrimary = Color.White,
+    onSecondary = Color.White,
+    onTertiary = Color.White,
+    onBackground = Color.White,
+    onSurface = Color.White
 )
 
 @Composable

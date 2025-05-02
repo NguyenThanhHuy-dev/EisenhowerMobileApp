@@ -1,5 +1,7 @@
 package com.example.todolist.ui.components
 
+import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,23 +19,44 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.todolist.data.Task
 
+
+
+
+@SuppressLint("AutoboxingStateValueProperty")
 @Composable
 fun TaskCard(
-    modifier: Modifier = Modifier, // ✅ Modifier comes first
+    modifier: Modifier = Modifier,
     task: Task,
     onCheckedChange: (Boolean) -> Unit = {},
     onDelete: () -> Unit = {}
 ) {
+
+    val elevation = remember { mutableStateOf(4.dp) }
+    val scale = remember { mutableFloatStateOf(1f) }
+
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(10.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
+            .padding(10.dp)
+            .clickable(
+                onClick = {
+                    elevation.value = 8.dp
+                    scale.floatValue = 1.05f
+                },
+            )
+            .scale(scale.floatValue),
+        elevation = CardDefaults.cardElevation(elevation.value),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE0F2FE)),
     ) {
         Column(
             modifier = Modifier
@@ -47,7 +70,8 @@ fun TaskCard(
                 Text(
                     text = task.title,
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    color = Color.Black
                 )
 
                 Checkbox(
