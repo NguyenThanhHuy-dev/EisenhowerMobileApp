@@ -15,6 +15,9 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
     val quadrant3Tasks = repository.quadrant3Tasks
     val quadrant4Tasks = repository.quadrant4Tasks
 
+    val completedTasks = repository.completedTasks
+
+
     fun addTask(task: Task) {
         viewModelScope.launch {
             repository.addTask(task)

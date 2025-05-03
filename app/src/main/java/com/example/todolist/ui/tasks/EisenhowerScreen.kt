@@ -4,11 +4,9 @@ package com.example.todolist.ui.tasks
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -16,19 +14,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import androidx.core.graphics.toColorInt
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.todolist.GreetingImage
+import com.example.todolist.R
 import com.example.todolist.TodoApplication
 import com.example.todolist.ui.components.MyBottomBar
 import com.example.todolist.ui.components.Quadrant
 import com.example.todolist.ui.viewmodels.TaskViewModel
 import com.example.todolist.ui.viewmodels.TaskViewModelFactory
-import com.example.todolist.R
+import java.util.Calendar
 
 
 val DoFirstColor = Color(0xE6FF4B4B) // #FF4B4B with 0.9 alpha (E6 in hex)
@@ -41,6 +39,7 @@ val DontDoColor = Color(0xE6E0E0E0) // #E0E0E0 with 0.9 alpha
 @Composable
 fun EisenhowerScreen(
     onAddTask: () -> Unit,
+    onViewFinishedTasks: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: TaskViewModel = getTaskViewModel()
 ) {
@@ -49,12 +48,21 @@ fun EisenhowerScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
+//                    Text(
+//                        text = "Eisenhower Matrix",
+//                        style = MaterialTheme.typography.headlineMedium,
+//                        color = Color.White,
+//                        modifier = Modifier.shadow(elevation = 6.dp)
+//                    )
                     Text(
-                        text = "Eisenhower Matrix",
-                        style = MaterialTheme.typography.headlineMedium,
-                        color = Color.White,
-                        modifier = Modifier.shadow(elevation = 6.dp)
+                        text = getGreeting(),
+                        style = androidx.compose.ui.text.TextStyle(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 24.sp,
+                            color = Color.White
+                        )
                     )
+
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = Color.Transparent
@@ -62,8 +70,13 @@ fun EisenhowerScreen(
             )
         },
         bottomBar = {
-            MyBottomBar(onAddTask)
+            MyBottomBar(
+                onAddTaskClick = onAddTask,
+                onFinishedTasksClick = onViewFinishedTasks
+            )
+
         },
+        containerColor = Color(0xFF1A202C) // Dark background
 
         ) { padding ->
         GreetingImage(imageResId = R.drawable.background1, alpha = 0.3f)
@@ -160,4 +173,14 @@ fun getTaskViewModel(): TaskViewModel {
     return viewModel(
         factory = TaskViewModelFactory(application.repository)
     )
+}
+
+// --- Helper Functions ---
+fun getGreeting(): String {
+    val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+    return when (hour) {
+        in 0..11 -> "Good Morning"
+        in 12..17 -> "Good Afternoon"
+        else -> "Good Evening"
+    }
 }

@@ -13,17 +13,21 @@ interface TaskDao {
     @Query("SELECT * FROM tasks")
     fun getAllTasks(): Flow<List<Task>>
 
-    @Query("SELECT * FROM tasks WHERE (isImportant = 1 AND isUrgent = 1)")
+    @Query("SELECT * FROM tasks WHERE isImportant = 1 AND isUrgent = 1 AND isCompleted = 0")
     fun getQuadrant1Tasks(): Flow<List<Task>>
 
-    @Query("SELECT * FROM tasks WHERE (isImportant = 1 AND isUrgent = 0)")
+    @Query("SELECT * FROM tasks WHERE (isImportant = 1 AND isUrgent = 0 AND isCompleted = 0)")
     fun getQuadrant2Tasks(): Flow<List<Task>>
 
-    @Query("SELECT * FROM tasks WHERE (isImportant = 0 AND isUrgent = 1)")
+    @Query("SELECT * FROM tasks WHERE (isImportant = 0 AND isUrgent = 1 AND isCompleted = 0)")
     fun getQuadrant3Tasks(): Flow<List<Task>>
 
-    @Query("SELECT * FROM tasks WHERE (isImportant = 0 AND isUrgent = 0)")
+    @Query("SELECT * FROM tasks WHERE (isImportant = 0 AND isUrgent = 0 AND isCompleted = 0)")
     fun getQuadrant4Tasks(): Flow<List<Task>>
+
+    @Query("SELECT * FROM tasks WHERE isCompleted = 1")
+    fun getCompletedTasks(): Flow<List<Task>>
+
 
     @Insert
     suspend fun insertTask(task: Task)

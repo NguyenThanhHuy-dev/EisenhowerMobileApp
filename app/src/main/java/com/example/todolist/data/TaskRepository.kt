@@ -10,6 +10,9 @@ class TaskRepository(private val taskDao: TaskDao) {
     val quadrant3Tasks: Flow<List<Task>> = taskDao.getQuadrant3Tasks()
     val quadrant4Tasks: Flow<List<Task>> = taskDao.getQuadrant4Tasks()
 
+    val completedTasks: Flow<List<Task>> = taskDao.getCompletedTasks()
+
+
     suspend fun addTask(task: Task) {
         taskDao.insertTask(task)
     }

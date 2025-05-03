@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,11 +28,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyBottomBar(
-    onButton1Click: () -> Unit
+    onAddTaskClick: () -> Unit,
+    onFinishedTasksClick: () -> Unit
 ) {
     val scale = remember { mutableFloatStateOf(1f) }
 
@@ -43,9 +47,21 @@ fun MyBottomBar(
                 horizontalArrangement = Arrangement.Center
             ) {
                 IconButton(
+                    onClick = { onFinishedTasksClick() },
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .border(BorderStroke(2.dp, Color.White), CircleShape)
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.List,
+                        contentDescription = "Finished Tasks",
+                        tint = Color.White
+                    )
+                }
+                IconButton(
                     onClick = {
                         scale.floatValue = 1.1f
-                        onButton1Click()
+                        onAddTaskClick()
                     },
                     modifier = Modifier
                         .padding(end = 10.dp)
@@ -62,6 +78,7 @@ fun MyBottomBar(
                         tint = Color.White
                     )
                 }
+
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
@@ -73,4 +90,6 @@ fun MyBottomBar(
     )
 
 
+
 }
+
