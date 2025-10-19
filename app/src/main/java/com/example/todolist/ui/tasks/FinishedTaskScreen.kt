@@ -24,7 +24,7 @@ import androidx.compose.runtime.getValue
 @Composable
 fun FinishedTasksScreen(
     onBack: () -> Unit,
-    viewModel: TaskViewModel = getTaskViewModel()
+    viewModel: TaskViewModel
 ) {
     val tasks by viewModel.completedTasks.collectAsState(initial = emptyList())
 

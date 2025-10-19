@@ -41,7 +41,7 @@ fun EisenhowerScreen(
     onAddTask: () -> Unit,
     onViewFinishedTasks: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: TaskViewModel = getTaskViewModel()
+    viewModel: TaskViewModel
 ) {
 
     Scaffold(

@@ -40,7 +40,7 @@ import com.example.todolist.ui.viewmodels.TaskViewModel
 fun AddTaskScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: TaskViewModel = getTaskViewModel()
+    viewModel: TaskViewModel
 ) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }

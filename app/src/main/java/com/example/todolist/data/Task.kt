@@ -13,14 +13,5 @@ data class Task(
     val isUrgent: Boolean,
     val createdAt: Long = System.currentTimeMillis(),
     val isCompleted: Boolean = false
-) {
-    fun quadrant(): Int {
-        return when {
-            isImportant && isUrgent -> 1
-            isImportant && !isUrgent -> 2
-            !isImportant && isUrgent -> 3
-            else -> 4
-        }
-    }
-}
+) {}
 
