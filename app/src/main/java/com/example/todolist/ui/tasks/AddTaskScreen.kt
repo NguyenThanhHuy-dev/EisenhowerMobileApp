@@ -49,15 +49,6 @@ fun AddTaskScreen(
 
     Scaffold(
         topBar = {
-//            TopAppBar(
-//                title = { Text("Add New Task", color = Color(0xE6FF4B4B)) },
-//                navigationIcon = {
-//                    IconButton(onClick = onBack) {
-//                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-//                    }
-//                },
-//
-//            )
             CenterAlignedTopAppBar(
                 title = {
                     Text(

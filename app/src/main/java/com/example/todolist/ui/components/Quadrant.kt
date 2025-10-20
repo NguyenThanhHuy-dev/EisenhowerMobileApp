@@ -13,12 +13,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.todolist.data.Task
 
 @Composable
@@ -36,23 +34,21 @@ fun Quadrant(
             .fillMaxSize()
             .padding(8.dp)
             .clip(RoundedCornerShape(16.dp))
-            .background(backgroundColor)
-            .border(width = 2.dp, color = Color.Black.copy(alpha = 0.2f), shape = RoundedCornerShape(16.dp))
-            .shadow(elevation = 4.dp, RoundedCornerShape(16.dp))
+            .background(backgroundColor.copy(alpha = 0.6f)) // Tăng alpha một chút để dễ nhìn hơn
+            .border(width = 1.dp, color = Color.White.copy(alpha = 0.2f), shape = RoundedCornerShape(16.dp))
     ) {
         Text(
             text = title,
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.Black.copy(alpha = 0.1f))
                 .padding(16.dp),
             style = MaterialTheme.typography.titleLarge,
-            color = Color.Black,
+            color = Color.White,
 
         )
 
         LazyColumn {
-            items(tasks) { task -> // 'tasks' should be a List<Task>
+            items(tasks) { task ->
                 TaskCard(
                     task = task,
                     onClick = { onTaskClick(task.id) },

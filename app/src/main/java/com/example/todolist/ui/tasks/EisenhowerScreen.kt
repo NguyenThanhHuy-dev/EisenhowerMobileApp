@@ -1,6 +1,8 @@
 // app/src/main/java/com/example/todolist/ui/tasks/EisenhowerScreen.kt
 package com.example.todolist.ui.tasks
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,10 +27,11 @@ import com.example.todolist.R
 import com.example.todolist.TodoApplication
 import com.example.todolist.ui.components.MyBottomBar
 import com.example.todolist.ui.components.Quadrant
-import com.example.todolist.ui.theme.DelegateColor
-import com.example.todolist.ui.theme.DoFirstColor
-import com.example.todolist.ui.theme.DontDoColor
-import com.example.todolist.ui.theme.ScheduleColor
+import com.example.todolist.ui.theme.AmberYellow
+import com.example.todolist.ui.theme.CoralPink
+import com.example.todolist.ui.theme.DarkBackground
+import com.example.todolist.ui.theme.SilverGray
+import com.example.todolist.ui.theme.SkyBlue
 import com.example.todolist.ui.viewmodels.TaskViewModel
 import com.example.todolist.ui.viewmodels.TaskViewModelFactory
 import java.util.Calendar
@@ -66,96 +69,108 @@ fun EisenhowerScreen(
             )
 
         },
-        containerColor = Color(0xFF1A202C) // Dark background
+        containerColor = DarkBackground
 
         ) { padding ->
-        GreetingImage(imageResId = R.drawable.background1, alpha = 0.3f)
 
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(padding)
-        ) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                // Row 1: Quadrant 1 and 2
-                Row(modifier = Modifier.weight(1f)) {
-                    // Quadrant 1: Urgent & Important
-                    val q1Tasks by viewModel.quadrant1Tasks.collectAsState(initial = emptyList())
-                    Quadrant(
-                        title = "Do First",
-                        tasks = q1Tasks,
-                        onTaskClick = onTaskClick,
+        Box(modifier = Modifier.fillMaxSize()) {
+            GreetingImage(imageResId = R.drawable.background1, alpha = 0.3f)
 
-                        onTaskChecked = { task, checked ->
-                            viewModel.updateTask(task.copy(isCompleted = checked))
-                        },
-                        onDeleteTask = { task ->
-                            viewModel.deleteTask(task)
-                        },
-                        modifier = Modifier.weight(1f),
-                        backgroundColor = DoFirstColor
-                    )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(DarkBackground.copy(alpha = 0.5f)) // Lớp phủ màu tối, bán trong suốt
+            )
 
-                    // Quadrant 2: Not Urgent & Important
-                    val q2Tasks by viewModel.quadrant2Tasks.collectAsState(initial = emptyList())
-                    Quadrant(
-                        title = "Schedule",
-                        tasks = q2Tasks,
-                        onTaskClick = onTaskClick,
+            Column(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(padding)
+            ) {
+                Column(modifier = Modifier.fillMaxSize()) {
+                    // Row 1: Quadrant 1 and 2
+                    Row(modifier = Modifier.weight(1f)) {
+                        // Quadrant 1: Urgent & Important
+                        val q1Tasks by viewModel.quadrant1Tasks.collectAsState(initial = emptyList())
+                        Quadrant(
+                            title = "Do First",
+                            tasks = q1Tasks,
+                            onTaskClick = onTaskClick,
 
-                        onTaskChecked = { task, checked ->
-                            viewModel.updateTask(task.copy(isCompleted = checked))
-                        },
-                        onDeleteTask = { task ->
-                            viewModel.deleteTask(task)
-                        },
-                        modifier = Modifier.weight(1f),
-                        backgroundColor = ScheduleColor
+                            onTaskChecked = { task, checked ->
+                                viewModel.updateTask(task.copy(isCompleted = checked))
+                            },
+                            onDeleteTask = { task ->
+                                viewModel.deleteTask(task)
+                            },
+                            modifier = Modifier.weight(1f),
+                            backgroundColor = CoralPink
+                        )
 
-                    )
+                        // Quadrant 2: Not Urgent & Important
+                        val q2Tasks by viewModel.quadrant2Tasks.collectAsState(initial = emptyList())
+                        Quadrant(
+                            title = "Schedule",
+                            tasks = q2Tasks,
+                            onTaskClick = onTaskClick,
+
+                            onTaskChecked = { task, checked ->
+                                viewModel.updateTask(task.copy(isCompleted = checked))
+                            },
+                            onDeleteTask = { task ->
+                                viewModel.deleteTask(task)
+                            },
+                            modifier = Modifier.weight(1f),
+                            backgroundColor = SkyBlue
+
+                        )
+                    }
+
+                    // Row 2: Quadrant 3 and 4
+                    Row(modifier = Modifier.weight(1f)) {
+                        // Quadrant 3: Urgent & Not Important
+                        val q3Tasks by viewModel.quadrant3Tasks.collectAsState(initial = emptyList())
+                        Quadrant(
+                            title = "Delegate",
+                            tasks = q3Tasks,
+                            onTaskClick = onTaskClick,
+
+                            onTaskChecked = { task, checked ->
+                                viewModel.updateTask(task.copy(isCompleted = checked))
+                            },
+                            onDeleteTask = { task ->
+                                viewModel.deleteTask(task)
+                            },
+                            modifier = Modifier.weight(1f),
+                            backgroundColor = AmberYellow
+
+                        )
+
+                        // Quadrant 4: Not Urgent & Not Important
+                        val q4Tasks by viewModel.quadrant4Tasks.collectAsState(initial = emptyList())
+                        Quadrant(
+                            title = "Don't Do",
+                            tasks = q4Tasks,
+                            onTaskClick = onTaskClick,
+
+                            onTaskChecked = { task, checked ->
+                                viewModel.updateTask(task.copy(isCompleted = checked))
+                            },
+                            onDeleteTask = { task ->
+                                viewModel.deleteTask(task)
+                            },
+                            modifier = Modifier.weight(1f),
+                            backgroundColor = SilverGray
+
+                        )
+                    }
                 }
 
-                // Row 2: Quadrant 3 and 4
-                Row(modifier = Modifier.weight(1f)) {
-                    // Quadrant 3: Urgent & Not Important
-                    val q3Tasks by viewModel.quadrant3Tasks.collectAsState(initial = emptyList())
-                    Quadrant(
-                        title = "Delegate",
-                        tasks = q3Tasks,
-                        onTaskClick = onTaskClick,
-
-                        onTaskChecked = { task, checked ->
-                            viewModel.updateTask(task.copy(isCompleted = checked))
-                        },
-                        onDeleteTask = { task ->
-                            viewModel.deleteTask(task)
-                        },
-                        modifier = Modifier.weight(1f),
-                        backgroundColor = DelegateColor
-
-                    )
-
-                    // Quadrant 4: Not Urgent & Not Important
-                    val q4Tasks by viewModel.quadrant4Tasks.collectAsState(initial = emptyList())
-                    Quadrant(
-                        title = "Don't Do",
-                        tasks = q4Tasks,
-                        onTaskClick = onTaskClick,
-
-                        onTaskChecked = { task, checked ->
-                            viewModel.updateTask(task.copy(isCompleted = checked))
-                        },
-                        onDeleteTask = { task ->
-                            viewModel.deleteTask(task)
-                        },
-                        modifier = Modifier.weight(1f),
-                        backgroundColor = DontDoColor
-
-                    )
-                }
             }
-
         }
+
+
+
     }
 }
 

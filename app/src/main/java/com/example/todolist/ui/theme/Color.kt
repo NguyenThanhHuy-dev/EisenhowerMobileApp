@@ -2,17 +2,13 @@ package com.example.todolist.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+val CoralPink = Color(0xFFFF8A80)      // Do First
+val SkyBlue = Color(0xFF80D8FF)        // Schedule
+val AmberYellow = Color(0xFFFFD180)    // Delegate
+val SilverGray = Color(0xFFCFD8DC)     // Don't Do
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
-
-val DoFirstColor = Color(0xE6FF4B4B)
-val ScheduleColor = Color(0xE64B7BFF)
-val DelegateColor = Color(0xE6FFB74B)
-val DontDoColor = Color(0xE6E0E0E0)
-val CardBackgroundColor = Color(0xFFE0F2FE)
-val DarkBackgroundColor = Color(0xFF1A202C)
+val DarkBackground = Color(0xFF1A202C) // Nền tối
+val LightBackground = Color(0xFFF7F9FC) // Nền sáng
+val MintGreenAction = Color(0xFF64FFDA) // Nút bấm
+val CardBackgroundLight = Color(0x99FFFFFF) // Màu thẻ trên nền sáng (có độ trong)
+val CardBackgroundDark = Color(0x33FFFFFF)  // Màu thẻ trên nền tối (có độ trong)
