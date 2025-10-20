@@ -16,12 +16,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.example.todolist.ui.EisenhowerNavigation
 import com.example.todolist.ui.theme.ToDoListTheme
+import com.example.todolist.utils.SoundPlayer
 
 // MainActivity.kt
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        SoundPlayer.loadSounds(this)
         setContent {
             ToDoListTheme() {
 
@@ -33,6 +35,11 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        SoundPlayer.release()
     }
 }
 

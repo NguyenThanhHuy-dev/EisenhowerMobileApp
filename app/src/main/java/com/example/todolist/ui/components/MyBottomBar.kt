@@ -1,95 +1,74 @@
 package com.example.todolist.ui.components
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material.icons.filled.Image
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import java.util.Calendar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyBottomBar(
     onAddTaskClick: () -> Unit,
-    onFinishedTasksClick: () -> Unit
+    onFinishedTasksClick: () -> Unit,
+    onChangeBackgroundClick: () -> Unit // <-- Thêm action mới
 ) {
-    val scale = remember { mutableFloatStateOf(1f) }
-
-    TopAppBar(
-        title = {
-        },
+    // Sử dụng BottomAppBar để có ngữ nghĩa đúng hơn
+    BottomAppBar(
+        containerColor = Color.Transparent, // Nền trong suốt
+        contentColor = Color.White,
         actions = {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(
-                    onClick = { onFinishedTasksClick() },
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .border(BorderStroke(2.dp, Color.White), CircleShape)
-                ) {
+                // Nút xem task đã hoàn thành
+                IconButton(onClick = onFinishedTasksClick) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.List,
-                        contentDescription = "Finished Tasks",
-                        tint = Color.White
-                    )
-                }
-                IconButton(
-                    onClick = {
-                        scale.floatValue = 1.1f
-                        onAddTaskClick()
-                    },
-                    modifier = Modifier
-                        .padding(end = 10.dp)
-                        .clip(CircleShape)
-                        .border(BorderStroke(2.dp, Color.White), CircleShape)// Keep some padding if needed
-                        .scale(scale.floatValue)
-                ) {
-                    Icon(
-                        Icons.Default.Add,
-                        contentDescription = "Add",
-                        modifier = Modifier
-                            .width(60.dp)
-                            .height(60.dp),
-                        tint = Color.White
+                        contentDescription = "Finished Tasks"
                     )
                 }
 
+                // Nút đổi ảnh nền
+                IconButton(onClick = onChangeBackgroundClick) {
+                    Icon(
+                        imageVector = Icons.Default.Image,
+                        contentDescription = "Change Background"
+                    )
+                }
             }
         },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Transparent
-        ),
-        modifier = Modifier
-            .height(80.dp)
+        // Nút FAB sẽ được đặt ở giữa
+        floatingActionButton = {
+            val interactionSource = remember { MutableInteractionSource() }
+            val isPressed by interactionSource.collectIsPressedAsState()
+            val scale by animateFloatAsState(if (isPressed) 1.1f else 1f, label = "")
 
+            FloatingActionButton(
+                onClick = onAddTaskClick,
+                shape = CircleShape,
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                modifier = Modifier.scale(scale),
+                interactionSource = interactionSource
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "Add Task")
+            }
+        }
     )
-
-
-
 }
-

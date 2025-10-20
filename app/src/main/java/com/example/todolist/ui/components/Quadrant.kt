@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.todolist.data.Task
+import com.example.todolist.utils.SoundPlayer
 
 @Composable
 fun Quadrant(
@@ -35,7 +36,11 @@ fun Quadrant(
             .padding(8.dp)
             .clip(RoundedCornerShape(16.dp))
             .background(backgroundColor.copy(alpha = 0.6f)) // Tăng alpha một chút để dễ nhìn hơn
-            .border(width = 1.dp, color = Color.White.copy(alpha = 0.2f), shape = RoundedCornerShape(16.dp))
+            .border(
+                width = 1.dp,
+                color = Color.White.copy(alpha = 0.2f),
+                shape = RoundedCornerShape(16.dp)
+            )
     ) {
         Text(
             text = title,
@@ -45,7 +50,7 @@ fun Quadrant(
             style = MaterialTheme.typography.titleLarge,
             color = Color.White,
 
-        )
+            )
 
         LazyColumn {
             items(tasks) { task ->
@@ -54,8 +59,15 @@ fun Quadrant(
                     onClick = { onTaskClick(task.id) },
                     onCheckedChange = { checked ->
                         onTaskChecked(task, checked)
+                        if (checked) {
+                            SoundPlayer.playFinishSound() // << THÊM DÒNG NÀY
+
+                        }
                     },
-                    onDelete = { onDeleteTask(task) }
+                    onDelete = {
+                        onDeleteTask(task)
+                        SoundPlayer.playDeleteSound()
+                    }
                 )
             }
         }

@@ -33,6 +33,7 @@ import com.example.todolist.GreetingImage
 import com.example.todolist.R
 import com.example.todolist.data.Task
 import com.example.todolist.ui.viewmodels.TaskViewModel
+import com.example.todolist.utils.SoundPlayer
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -158,6 +159,7 @@ fun AddTaskScreen(
                                 isUrgent = isUrgent
                             )
                             viewModel.addTask(task)
+                            SoundPlayer.playAddSound()
                             onBack()
                         }
                     },
