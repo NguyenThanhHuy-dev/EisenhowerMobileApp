@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -24,16 +25,13 @@ import com.example.todolist.R
 import com.example.todolist.TodoApplication
 import com.example.todolist.ui.components.MyBottomBar
 import com.example.todolist.ui.components.Quadrant
+import com.example.todolist.ui.theme.DelegateColor
+import com.example.todolist.ui.theme.DoFirstColor
+import com.example.todolist.ui.theme.DontDoColor
+import com.example.todolist.ui.theme.ScheduleColor
 import com.example.todolist.ui.viewmodels.TaskViewModel
 import com.example.todolist.ui.viewmodels.TaskViewModelFactory
 import java.util.Calendar
-
-
-val DoFirstColor = Color(0xE6FF4B4B) // #FF4B4B with 0.9 alpha (E6 in hex)
-val ScheduleColor = Color(0xE64B7BFF) // #4B7BFF with 0.9 alpha
-val DelegateColor = Color(0xE6FFB74B) // #FFB74B with 0.9 alpha
-val DontDoColor = Color(0xE6E0E0E0) // #E0E0E0 with 0.9 alpha
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,26 +39,18 @@ fun EisenhowerScreen(
     onAddTask: () -> Unit,
     onViewFinishedTasks: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: TaskViewModel
+    onTaskClick: (Long) -> Unit,
+    viewModel: TaskViewModel,
 ) {
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-//                    Text(
-//                        text = "Eisenhower Matrix",
-//                        style = MaterialTheme.typography.headlineMedium,
-//                        color = Color.White,
-//                        modifier = Modifier.shadow(elevation = 6.dp)
-//                    )
                     Text(
                         text = getGreeting(),
-                        style = androidx.compose.ui.text.TextStyle(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 24.sp,
-                            color = Color.White
-                        )
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = Color.White
                     )
 
                 },
@@ -85,11 +75,6 @@ fun EisenhowerScreen(
             modifier = modifier
                 .fillMaxSize()
                 .padding(padding)
-//                .background(
-//                    brush = Brush.verticalGradient(
-//                        colors = listOf(DarkBlue, LightBlue)
-//                    )
-//                )
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
                 // Row 1: Quadrant 1 and 2
@@ -99,6 +84,8 @@ fun EisenhowerScreen(
                     Quadrant(
                         title = "Do First",
                         tasks = q1Tasks,
+                        onTaskClick = onTaskClick,
+
                         onTaskChecked = { task, checked ->
                             viewModel.updateTask(task.copy(isCompleted = checked))
                         },
@@ -114,6 +101,8 @@ fun EisenhowerScreen(
                     Quadrant(
                         title = "Schedule",
                         tasks = q2Tasks,
+                        onTaskClick = onTaskClick,
+
                         onTaskChecked = { task, checked ->
                             viewModel.updateTask(task.copy(isCompleted = checked))
                         },
@@ -133,6 +122,8 @@ fun EisenhowerScreen(
                     Quadrant(
                         title = "Delegate",
                         tasks = q3Tasks,
+                        onTaskClick = onTaskClick,
+
                         onTaskChecked = { task, checked ->
                             viewModel.updateTask(task.copy(isCompleted = checked))
                         },
@@ -149,6 +140,8 @@ fun EisenhowerScreen(
                     Quadrant(
                         title = "Don't Do",
                         tasks = q4Tasks,
+                        onTaskClick = onTaskClick,
+
                         onTaskChecked = { task, checked ->
                             viewModel.updateTask(task.copy(isCompleted = checked))
                         },

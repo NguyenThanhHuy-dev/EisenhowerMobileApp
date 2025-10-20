@@ -2,6 +2,7 @@ package com.example.todolist.ui.components
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,7 +30,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.todolist.data.Task
 
-
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.runtime.getValue
 
 
 @SuppressLint("AutoboxingStateValueProperty")
@@ -37,25 +39,23 @@ import com.example.todolist.data.Task
 fun TaskCard(
     modifier: Modifier = Modifier,
     task: Task,
+    onClick: () -> Unit,
     onCheckedChange: (Boolean) -> Unit = {},
     onDelete: () -> Unit = {}
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
 
-    val elevation = remember { mutableStateOf(4.dp) }
-    val scale = remember { mutableFloatStateOf(1f) }
+    val elevation = if (isPressed) 8.dp else 4.dp
+    val scale = if(isPressed) 1.05f else 1f
 
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(10.dp)
-            .clickable(
-                onClick = {
-                    elevation.value = 8.dp
-                    scale.floatValue = 1.05f
-                },
-            )
-            .scale(scale.floatValue),
-        elevation = CardDefaults.cardElevation(elevation.value),
+            .clickable(interactionSource = interactionSource, indication = null, onClick = onClick)
+            .scale(scale),
+        elevation = CardDefaults.cardElevation(elevation),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFE0F2FE)),
     ) {
         Column(

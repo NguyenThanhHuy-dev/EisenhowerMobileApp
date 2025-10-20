@@ -28,6 +28,9 @@ interface TaskDao {
     @Query("SELECT * FROM tasks WHERE isCompleted = 1")
     fun getCompletedTasks(): Flow<List<Task>>
 
+    @Query("SELECT * FROM tasks WHERE id = :taskId")
+    fun getTaskById(taskId: Long): Flow<Task?>
+
 
     @Insert
     suspend fun insertTask(task: Task)

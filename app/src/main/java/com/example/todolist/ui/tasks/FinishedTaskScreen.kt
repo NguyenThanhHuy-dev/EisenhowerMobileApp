@@ -24,7 +24,8 @@ import androidx.compose.runtime.getValue
 @Composable
 fun FinishedTasksScreen(
     onBack: () -> Unit,
-    viewModel: TaskViewModel
+    viewModel: TaskViewModel,
+    onTaskClick: (Long) -> Unit
 ) {
     val tasks by viewModel.completedTasks.collectAsState(initial = emptyList())
 
@@ -44,6 +45,7 @@ fun FinishedTasksScreen(
             items(tasks) { task ->
                 TaskCard(
                     task = task,
+                    onClick = { onTaskClick(task.id) },
                     onCheckedChange = { /* maybe uncheck to mark as not done */ },
                     onDelete = { viewModel.deleteTask(task) }
                 )

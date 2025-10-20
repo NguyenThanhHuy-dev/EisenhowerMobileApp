@@ -25,6 +25,7 @@ import com.example.todolist.data.Task
 fun Quadrant(
     title: String,
     tasks: List<Task>,
+    onTaskClick: (Long) -> Unit,
     onTaskChecked: (Task, Boolean) -> Unit,
     onDeleteTask: (Task) -> Unit,
     modifier: Modifier = Modifier,
@@ -45,16 +46,16 @@ fun Quadrant(
                 .fillMaxWidth()
                 .background(Color.Black.copy(alpha = 0.1f))
                 .padding(16.dp),
+            style = MaterialTheme.typography.titleLarge,
             color = Color.Black,
-            fontSize = 18.sp,
-            fontFamily = FontFamily.SansSerif,
-            style = MaterialTheme.typography.titleMedium
+
         )
 
         LazyColumn {
             items(tasks) { task -> // 'tasks' should be a List<Task>
                 TaskCard(
                     task = task,
+                    onClick = { onTaskClick(task.id) },
                     onCheckedChange = { checked ->
                         onTaskChecked(task, checked)
                     },
