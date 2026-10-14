@@ -33,4 +33,6 @@
     <string name="task_restored">Đã khôi phục công việc</string>
     <string name="task_deleted">Đã xóa công việc</string>
     <string name="undo">Hoàn tác</string>
+    <string name="grid_view">Chế độ lưới</string>
+    <string name="tab_view">Chế độ từng thẻ</string>
 </resources>

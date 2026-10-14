@@ -2,21 +2,34 @@ package com.example.todolist.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AssignmentTurnedIn
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.todolist.R
 import com.example.todolist.data.Task
 import com.example.todolist.utils.SoundPlayer
 
@@ -33,44 +46,93 @@ fun Quadrant(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(8.dp)
+            .padding(6.dp)
             .clip(RoundedCornerShape(16.dp))
-            .background(backgroundColor.copy(alpha = 0.6f)) // Tăng alpha một chút để dễ nhìn hơn
+            .background(backgroundColor.copy(alpha = 0.55f))
             .border(
                 width = 1.dp,
-                color = Color.White.copy(alpha = 0.2f),
+                color = Color.White.copy(alpha = 0.25f),
                 shape = RoundedCornerShape(16.dp)
             )
     ) {
-        Text(
-            text = title,
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            style = MaterialTheme.typography.titleLarge,
-            color = Color.White,
-
+                .padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                color = Color.White,
+                modifier = Modifier.weight(1f)
             )
 
-        LazyColumn {
-            items(tasks) { task ->
-                TaskCard(
-                    task = task,
-                    onClick = { onTaskClick(task.id) },
-                    onCheckedChange = { checked ->
-                        onTaskChecked(task, checked)
-                        if (checked) {
-                            SoundPlayer.playFinishSound() // << THÊM DÒNG NÀY
-
-                        }
-                    },
-                    onDelete = {
-                        onDeleteTask(task)
-                        SoundPlayer.playDeleteSound()
-                    }
-                )
+            if (tasks.isNotEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .background(Color.White.copy(alpha = 0.3f))
+                        .padding(horizontal = 8.dp, vertical = 2.dp)
+                ) {
+                    Text(
+                        text = tasks.size.toString(),
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
+                        color = Color.White
+                    )
+                }
             }
         }
 
+        if (tasks.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(8.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.AssignmentTurnedIn,
+                        contentDescription = null,
+                        modifier = Modifier.size(28.dp),
+                        tint = Color.White.copy(alpha = 0.4f)
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = stringResource(R.string.no_tasks_in_quadrant),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.White.copy(alpha = 0.6f)
+                    )
+                }
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                items(tasks, key = { it.id }) { task ->
+                    TaskCard(
+                        task = task,
+                        accentColor = backgroundColor,
+                        onClick = { onTaskClick(task.id) },
+                        onCheckedChange = { checked ->
+                            onTaskChecked(task, checked)
+                            if (checked) {
+                                SoundPlayer.playFinishSound()
+                            }
+                        },
+                        onDelete = {
+                            onDeleteTask(task)
+                            SoundPlayer.playDeleteSound()
+                        }
+                    )
+                }
+            }
+        }
     }
 }

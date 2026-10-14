@@ -41,14 +41,14 @@ Cải tiến toàn diện ứng dụng Eisenhower ToDoList về mặt: Logic ngh
 5. **Unit Tests:**
    - Viết bộ unit test `TaskViewModelTest.kt` kiểm tra toàn bộ 6 nhánh hành vi (thêm, cập nhật, phục hồi, xóa, xóa sạch, phân loại 4 góc). 100% test pass. Đã hoàn thành.
 
-### Giai đoạn 2: Nâng Cấp UX/UI, Empty State, Chế Độ Xem Kép (Grid vs Tab) Cho Pixel [CHƯA BẮT ĐẦU]
+### Giai đoạn 2: Nâng Cấp UX/UI, Empty State, Chế Độ Xem Kép (Grid vs Tab) Cho Pixel [HOÀN THÀNH]
 1. **Chế độ xem kép (View Modes):**
-   - Toggle giữa **Lưới 2x2 (Grid)** và **4 Tab vuốt ngang (HorizontalPager)** tối ưu cho Pixel 1-3 màn hình nhỏ.
+   - Toggle giữa **Lưới 2x2 (Grid)** và **4 Tab vuốt ngang (HorizontalPager)** tối ưu cho Pixel 1-3 màn hình nhỏ, có ghi nhớ lựa chọn của người dùng trong SharedPreferences. Đã hoàn thành.
 2. **TaskCard & Empty State:**
-   - Làm đẹp TaskCard với thanh màu chỉ báo mức độ ưu tiên (accent strip) và hiệu ứng gạch ngang text khi hoàn thành.
-   - Thêm Empty State thân thiện cho từng góc khi chưa có việc.
+   - Làm đẹp TaskCard với thanh màu chỉ báo mức độ ưu tiên (accent strip), Material ripple effect khi bấm, viền bo tròn 12dp và hiệu ứng gạch ngang text khi hoàn thành. Đã hoàn thành.
+   - Thêm Empty State thân thiện kèm icon và thông điệp cho từng góc khi chưa có việc. Đã hoàn thành.
 3. **An toàn khi xóa (Undo Snackbar):**
-   - Bấm xóa có Snackbar "Đã xóa công việc" kèm nút "Hoàn tác" (Undo) 4 giây.
+   - Tích hợp `SnackbarHost` hiển thị "Đã xóa công việc" kèm nút "Hoàn tác" (Undo) trong 4 giây. Đã hoàn thành.
 
 ### Giai đoạn 3: Hạn Chót (Due Date) & Nhắc Việc (Reminder) [CHƯA BẮT ĐẦU]
 1. Thêm trường `dueDate` vào `Task` entity (Room migration v1 -> v2).
