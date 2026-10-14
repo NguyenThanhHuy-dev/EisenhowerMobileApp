@@ -95,7 +95,10 @@ fun TaskCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 IconButton(onClick = onDelete) {
-                    Icon(Icons.Default.Delete, contentDescription = "Delete")
+                    Icon(
+                        Icons.Default.Delete,
+                        contentDescription = androidx.compose.ui.res.stringResource(com.example.todolist.R.string.delete)
+                    )
                 }
             }
         }

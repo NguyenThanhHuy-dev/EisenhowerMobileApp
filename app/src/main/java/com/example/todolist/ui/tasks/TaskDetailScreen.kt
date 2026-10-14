@@ -1,15 +1,37 @@
 package com.example.todolist.ui.tasks
 
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import com.example.todolist.ui.viewmodels.TaskViewModel
-
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.todolist.R
+import com.example.todolist.ui.viewmodels.TaskViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -19,10 +41,8 @@ fun TaskDetailScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Lấy task từ ViewModel và theo dõi sự thay đổi của nó
     val taskState by viewModel.getTaskById(taskId).collectAsState(initial = null)
 
-    // Chỉ hiển thị giao diện khi task đã được tải xong
     taskState?.let { task ->
         var title by remember(task.title) { mutableStateOf(task.title) }
         var description by remember(task.description) { mutableStateOf(task.description) }
@@ -32,10 +52,13 @@ fun TaskDetailScreen(
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
-                    title = { Text("Edit Task") },
+                    title = { Text(stringResource(R.string.edit_task)) },
                     navigationIcon = {
                         IconButton(onClick = onBack) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(R.string.back)
+                            )
                         }
                     }
                 )
@@ -50,47 +73,68 @@ fun TaskDetailScreen(
                 OutlinedTextField(
                     value = title,
                     onValueChange = { title = it },
-                    label = { Text("Task Title") },
-                    modifier = Modifier.fillMaxWidth()
+                    label = { Text(stringResource(R.string.task_title)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
                 )
+
                 Spacer(modifier = Modifier.height(16.dp))
+
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },
-                    label = { Text("Description") },
-                    modifier = Modifier.fillMaxWidth().height(120.dp)
+                    label = { Text(stringResource(R.string.task_description)) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp),
+                    singleLine = false
                 )
+
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Các switch Important và Urgent
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Important?")
-                    Spacer(modifier = Modifier.width(8.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = stringResource(R.string.important_question),
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.weight(1f)
+                    )
                     Switch(checked = isImportant, onCheckedChange = { isImportant = it })
                 }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Urgent?")
-                    Spacer(modifier = Modifier.width(8.dp))
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = stringResource(R.string.urgent_question),
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.weight(1f)
+                    )
                     Switch(checked = isUrgent, onCheckedChange = { isUrgent = it })
                 }
-                Spacer(modifier = Modifier.weight(1f)) // Đẩy nút Save xuống dưới
 
-                // Nút Save
+                Spacer(modifier = Modifier.weight(1f))
+
                 Button(
                     onClick = {
                         val updatedTask = task.copy(
-                            title = title,
-                            description = description,
+                            title = title.trim(),
+                            description = description.trim(),
                             isImportant = isImportant,
                             isUrgent = isUrgent
                         )
                         viewModel.updateTask(updatedTask)
-                        onBack() // Quay lại màn hình trước sau khi lưu
+                        onBack()
                     },
                     modifier = Modifier.fillMaxWidth(),
                     enabled = title.isNotBlank()
                 ) {
-                    Text("Save Changes")
+                    Text(stringResource(R.string.save_changes))
                 }
             }
         }

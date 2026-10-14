@@ -5,12 +5,12 @@ import kotlinx.coroutines.flow.Flow
 
 class TaskRepository(private val taskDao: TaskDao) {
     val allTasks: Flow<List<Task>> = taskDao.getAllTasks()
-    val quadrant1Tasks: Flow<List<Task>> = taskDao.getQuadrant1Tasks()
-    val quadrant2Tasks: Flow<List<Task>> = taskDao.getQuadrant2Tasks()
-    val quadrant3Tasks: Flow<List<Task>> = taskDao.getQuadrant3Tasks()
-    val quadrant4Tasks: Flow<List<Task>> = taskDao.getQuadrant4Tasks()
-
+    val activeTasks: Flow<List<Task>> = taskDao.getActiveTasks()
     val completedTasks: Flow<List<Task>> = taskDao.getCompletedTasks()
+
+    suspend fun clearCompletedTasks() {
+        taskDao.clearCompletedTasks()
+    }
 
 
     suspend fun addTask(task: Task) {

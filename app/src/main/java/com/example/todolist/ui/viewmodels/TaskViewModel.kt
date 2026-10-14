@@ -1,4 +1,3 @@
-// app/src/main/java/com/example/todolist/ui/view models/TaskViewModel.kt
 package com.example.todolist.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
@@ -6,33 +5,67 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.todolist.data.Task
 import com.example.todolist.data.TaskRepository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
-    val allTasks = repository.allTasks
-    val quadrant1Tasks = repository.quadrant1Tasks
-    val quadrant2Tasks = repository.quadrant2Tasks
-    val quadrant3Tasks = repository.quadrant3Tasks
-    val quadrant4Tasks = repository.quadrant4Tasks
+class TaskViewModel(
+    private val repository: TaskRepository,
+    private val externalScope: CoroutineScope? = null
+) : ViewModel() {
+    private val scope: CoroutineScope
+        get() = externalScope ?: viewModelScope
 
+    val allTasks = repository.allTasks
+    val activeTasks = repository.activeTasks
     val completedTasks = repository.completedTasks
 
+    val quadrant1Tasks: StateFlow<List<Task>> = activeTasks
+        .map { tasks -> tasks.filter { it.isImportant && it.isUrgent } }
+        .stateIn(scope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val quadrant2Tasks: StateFlow<List<Task>> = activeTasks
+        .map { tasks -> tasks.filter { it.isImportant && !it.isUrgent } }
+        .stateIn(scope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val quadrant3Tasks: StateFlow<List<Task>> = activeTasks
+        .map { tasks -> tasks.filter { !it.isImportant && it.isUrgent } }
+        .stateIn(scope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val quadrant4Tasks: StateFlow<List<Task>> = activeTasks
+        .map { tasks -> tasks.filter { !it.isImportant && !it.isUrgent } }
+        .stateIn(scope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    fun restoreTask(task: Task) {
+        scope.launch {
+            repository.updateTask(task.copy(isCompleted = false))
+        }
+    }
+
+    fun clearCompletedTasks() {
+        scope.launch {
+            repository.clearCompletedTasks()
+        }
+    }
 
     fun addTask(task: Task) {
-        viewModelScope.launch {
+        scope.launch {
             repository.addTask(task)
         }
     }
 
     fun updateTask(task: Task) {
-        viewModelScope.launch {
+        scope.launch {
             repository.updateTask(task)
         }
     }
 
     fun deleteTask(task: Task) {
-        viewModelScope.launch {
+        scope.launch {
             repository.deleteTask(task)
         }
     }

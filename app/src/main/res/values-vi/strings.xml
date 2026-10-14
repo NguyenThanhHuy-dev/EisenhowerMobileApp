@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">ToDoList</string>
+    <string name="good_morning">Chào buổi sáng</string>
+    <string name="good_afternoon">Chào buổi chiều</string>
+    <string name="good_evening">Chào buổi tối</string>
+    <string name="user_avatar">Ảnh đại diện</string>
+    <string name="background">Hình nền</string>
+    <string name="do_first">Làm ngay</string>
+    <string name="schedule">Lên lịch</string>
+    <string name="delegate">Ủy quyền</string>
+    <string name="dont_do">Bỏ qua</string>
+    <string name="finished_tasks">Việc đã hoàn thành</string>
+    <string name="add_new_task">Thêm việc mới</string>
+    <string name="edit_task">Sửa việc</string>
+    <string name="task_title">Tiêu đề công việc</string>
+    <string name="task_description_optional">Mô tả (không bắt buộc)</string>
+    <string name="task_description">Mô tả</string>
+    <string name="eisenhower_matrix_classification">Phân loại Ma trận Eisenhower</string>
+    <string name="important_question">Quan trọng?</string>
+    <string name="urgent_question">Khẩn cấp?</string>
+    <string name="add_task_button">Thêm việc</string>
+    <string name="save_changes">Lưu thay đổi</string>
+    <string name="delete">Xóa</string>
+    <string name="change_background">Đổi hình nền</string>
+    <string name="clear_all_completed">Xóa tất cả</string>
+    <string name="clear_all_confirm_title">Xóa tất cả việc đã hoàn thành?</string>
+    <string name="clear_all_confirm_message">Bạn có chắc chắn muốn xóa tất cả việc đã hoàn thành? Hành động này không thể hoàn tác.</string>
+    <string name="cancel">Hủy</string>
+    <string name="confirm">Xóa</string>
+    <string name="no_finished_tasks">Chưa có việc nào hoàn thành</string>
+    <string name="no_tasks_in_quadrant">Chưa có việc nào ở đây</string>
+    <string name="back">Quay lại</string>
+    <string name="task_restored">Đã khôi phục công việc</string>
+    <string name="task_deleted">Đã xóa công việc</string>
+    <string name="undo">Hoàn tác</string>
+</resources>

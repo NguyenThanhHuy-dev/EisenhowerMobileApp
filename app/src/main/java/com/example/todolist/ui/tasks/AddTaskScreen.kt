@@ -9,15 +9,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,15 +29,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.todolist.GreetingImage
 import com.example.todolist.R
 import com.example.todolist.data.Task
 import com.example.todolist.ui.viewmodels.TaskViewModel
 import com.example.todolist.utils.SoundPlayer
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,60 +55,50 @@ fun AddTaskScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Add new task",
-                        style = MaterialTheme.typography.headlineMedium,
-                        color = Color.Black,
-                        modifier = Modifier.shadow(elevation = 6.dp),
-
+                        text = stringResource(R.string.add_new_task),
+                        style = MaterialTheme.typography.titleLarge
                     )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
+                    }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = Color.Transparent
                 )
             )
-        },
-
-        ) { padding ->
-        GreetingImage(imageResId = R.drawable.wave1, alpha = 0.5f)
-
+        }
+    ) { padding ->
+        GreetingImage(imageResId = R.drawable.wave1, alpha = 0.35f)
 
         Box(
             modifier = modifier
                 .fillMaxSize()
                 .padding(padding)
-//                .background(
-//                    brush = Brush.verticalGradient(
-//                        colors = listOf(
-//                            Color(0xFF5DE0F0),
-////                            Color(0xFF77D6F1),
-////                            Color(0xFF90CDF2),
-//                            Color(0xFFAAC3F3)
-//                        )
-//                    )
-//                )
-        )
-        {
+        ) {
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding)
-                    .padding(16.dp),
-
-                ) {
+                    .padding(16.dp)
+            ) {
                 OutlinedTextField(
                     value = title,
                     onValueChange = { title = it },
-                    label = { Text("Task Title", color = Color.Black) },
+                    label = { Text(stringResource(R.string.task_title)) },
                     modifier = Modifier.fillMaxWidth(),
-
-                    )
+                    singleLine = true
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },
-                    label = { Text("Description (optional)", color = Color.Black) },
+                    label = { Text(stringResource(R.string.task_description_optional)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(120.dp),
@@ -116,9 +108,9 @@ fun AddTaskScreen(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Text(
-                    text = "Eisenhower Matrix Classification",
+                    text = stringResource(R.string.eisenhower_matrix_classification),
                     style = MaterialTheme.typography.titleMedium,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -127,20 +119,28 @@ fun AddTaskScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Important?", color = Color.Black)
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(R.string.important_question),
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.weight(1f)
+                    )
                     Switch(
                         checked = isImportant,
                         onCheckedChange = { isImportant = it }
                     )
                 }
 
+                Spacer(modifier = Modifier.height(8.dp))
+
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Urgent?", color = Color.Black)
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(R.string.urgent_question),
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.weight(1f)
+                    )
                     Switch(
                         checked = isUrgent,
                         onCheckedChange = { isUrgent = it }
@@ -153,8 +153,8 @@ fun AddTaskScreen(
                     onClick = {
                         if (title.isNotBlank()) {
                             val task = Task(
-                                title = title,
-                                description = description,
+                                title = title.trim(),
+                                description = description.trim(),
                                 isImportant = isImportant,
                                 isUrgent = isUrgent
                             )
@@ -166,7 +166,7 @@ fun AddTaskScreen(
                     modifier = Modifier.fillMaxWidth(),
                     enabled = title.isNotBlank()
                 ) {
-                    Text("Add Task", color = Color.Black)
+                    Text(stringResource(R.string.add_task_button))
                 }
             }
         }

@@ -106,8 +106,8 @@ fun EisenhowerScreen(
                     ) {
                         // Vòng tròn Avatar
                         AsyncImage(
-                            model = avatarUri ?: R.drawable.ic_launcher_foreground, // Ảnh mặc định nếu chưa có avatar
-                            contentDescription = "User Avatar",
+                            model = avatarUri ?: R.drawable.ic_launcher_foreground,
+                            contentDescription = androidx.compose.ui.res.stringResource(R.string.user_avatar),
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .size(40.dp)
@@ -122,7 +122,7 @@ fun EisenhowerScreen(
                         Spacer(modifier = Modifier.width(12.dp))
                         // Lời chào
                         Text(
-                            text = getGreeting(),
+                            text = getGreeting(context),
                             style = MaterialTheme.typography.headlineMedium,
                             color = Color.White
                         )
@@ -175,7 +175,7 @@ fun EisenhowerScreen(
                         // Quadrant 1: Urgent & Important
                         val q1Tasks by viewModel.quadrant1Tasks.collectAsState(initial = emptyList())
                         Quadrant(
-                            title = "Do First",
+                            title = androidx.compose.ui.res.stringResource(R.string.do_first),
                             tasks = q1Tasks,
                             onTaskClick = onTaskClick,
 
@@ -192,7 +192,7 @@ fun EisenhowerScreen(
                         // Quadrant 2: Not Urgent & Important
                         val q2Tasks by viewModel.quadrant2Tasks.collectAsState(initial = emptyList())
                         Quadrant(
-                            title = "Schedule",
+                            title = androidx.compose.ui.res.stringResource(R.string.schedule),
                             tasks = q2Tasks,
                             onTaskClick = onTaskClick,
 
@@ -213,7 +213,7 @@ fun EisenhowerScreen(
                         // Quadrant 3: Urgent & Not Important
                         val q3Tasks by viewModel.quadrant3Tasks.collectAsState(initial = emptyList())
                         Quadrant(
-                            title = "Delegate",
+                            title = androidx.compose.ui.res.stringResource(R.string.delegate),
                             tasks = q3Tasks,
                             onTaskClick = onTaskClick,
 
@@ -231,7 +231,7 @@ fun EisenhowerScreen(
                         // Quadrant 4: Not Urgent & Not Important
                         val q4Tasks by viewModel.quadrant4Tasks.collectAsState(initial = emptyList())
                         Quadrant(
-                            title = "Don't Do",
+                            title = androidx.compose.ui.res.stringResource(R.string.dont_do),
                             tasks = q4Tasks,
                             onTaskClick = onTaskClick,
 
@@ -265,15 +265,13 @@ fun getTaskViewModel(): TaskViewModel {
 }
 
 // --- Helper Functions ---
-fun getGreeting(): String {
+fun getGreeting(context: Context): String {
     val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
     return when (hour) {
-        in 0..11 -> "Good Morning"
-        in 12..17 -> "Good Afternoon"
-        else -> "Good Evening"
+        in 0..11 -> context.getString(R.string.good_morning)
+        in 12..17 -> context.getString(R.string.good_afternoon)
+        else -> context.getString(R.string.good_evening)
     }
-
-
 }
 // --- CÁC HÀM HELPER ĐỂ LƯU/TẢI URI ---
 private fun saveBackgroundUri(context: Context, uriString: String) {

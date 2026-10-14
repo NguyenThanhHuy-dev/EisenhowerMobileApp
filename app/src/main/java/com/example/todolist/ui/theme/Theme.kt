@@ -11,40 +11,39 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
-val LightBlue = Color(0xFFADD8E6) // Light blue
-val DarkBlue = Color(0xFF00008B) // Dark blue
-val LightGray = Color(0xFFF0F0F0) // Light gray
-
 private val DarkColorScheme = darkColorScheme(
-    primary = DarkBlue,
-    secondary = DarkBlue,
-    tertiary = DarkBlue,
-    background = LightGray,
-    surface = LightGray,
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
+    primary = SkyBlue,
+    onPrimary = Color(0xFF003549),
+    secondary = MintGreenAction,
+    onSecondary = Color(0xFF00382B),
+    tertiary = AmberYellow,
+    onTertiary = Color(0xFF432C00),
+    background = DarkBackground,
     onBackground = Color.White,
-    onSurface = Color.White
+    surface = Color(0xFF242C3D),
+    onSurface = Color.White,
+    surfaceVariant = Color(0xFF333E52),
+    onSurfaceVariant = Color(0xFFCBD5E1)
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = LightBlue,
-    secondary = LightBlue,
-    tertiary = LightBlue,
-    background = LightGray,
-    surface = LightGray,
+    primary = Color(0xFF0284C7),
     onPrimary = Color.White,
+    secondary = Color(0xFF0D9488),
     onSecondary = Color.White,
+    tertiary = Color(0xFFD97706),
     onTertiary = Color.White,
-    onBackground = Color.White,
-    onSurface = Color.White
+    background = LightBackground,
+    onBackground = Color(0xFF0F172A),
+    surface = Color.White,
+    onSurface = Color(0xFF0F172A),
+    surfaceVariant = Color(0xFFE2E8F0),
+    onSurfaceVariant = Color(0xFF475569)
 )
 
 @Composable
 fun ToDoListTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
@@ -53,7 +52,6 @@ fun ToDoListTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
@@ -63,5 +61,4 @@ fun ToDoListTheme(
         typography = Typography,
         content = content
     )
-
 }

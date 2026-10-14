@@ -40,7 +40,7 @@ fun MyBottomBar(
                 IconButton(onClick = onFinishedTasksClick) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.List,
-                        contentDescription = "Finished Tasks"
+                        contentDescription = androidx.compose.ui.res.stringResource(com.example.todolist.R.string.finished_tasks)
                     )
                 }
 
@@ -48,7 +48,7 @@ fun MyBottomBar(
                 IconButton(onClick = onChangeBackgroundClick) {
                     Icon(
                         imageVector = Icons.Default.Image,
-                        contentDescription = "Change Background"
+                        contentDescription = androidx.compose.ui.res.stringResource(com.example.todolist.R.string.change_background)
                     )
                 }
             }
@@ -67,7 +67,10 @@ fun MyBottomBar(
                 modifier = Modifier.scale(scale),
                 interactionSource = interactionSource
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Add Task")
+                Icon(
+                    Icons.Default.Add,
+                    contentDescription = androidx.compose.ui.res.stringResource(com.example.todolist.R.string.add_task_button)
+                )
             }
         }
     )

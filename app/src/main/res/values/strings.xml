@@ -1,3 +1,36 @@
 <resources>
     <string name="app_name">ToDoList</string>
+    <string name="good_morning">Good Morning</string>
+    <string name="good_afternoon">Good Afternoon</string>
+    <string name="good_evening">Good Evening</string>
+    <string name="user_avatar">User Avatar</string>
+    <string name="background">Background</string>
+    <string name="do_first">Do First</string>
+    <string name="schedule">Schedule</string>
+    <string name="delegate">Delegate</string>
+    <string name="dont_do">Don\'t Do</string>
+    <string name="finished_tasks">Finished Tasks</string>
+    <string name="add_new_task">Add new task</string>
+    <string name="edit_task">Edit Task</string>
+    <string name="task_title">Task Title</string>
+    <string name="task_description_optional">Description (optional)</string>
+    <string name="task_description">Description</string>
+    <string name="eisenhower_matrix_classification">Eisenhower Matrix Classification</string>
+    <string name="important_question">Important?</string>
+    <string name="urgent_question">Urgent?</string>
+    <string name="add_task_button">Add Task</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="delete">Delete</string>
+    <string name="change_background">Change Background</string>
+    <string name="clear_all_completed">Clear All</string>
+    <string name="clear_all_confirm_title">Clear All Completed Tasks?</string>
+    <string name="clear_all_confirm_message">Are you sure you want to delete all finished tasks? This cannot be undone.</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Clear</string>
+    <string name="no_finished_tasks">No finished tasks yet</string>
+    <string name="no_tasks_in_quadrant">No tasks here</string>
+    <string name="back">Back</string>
+    <string name="task_restored">Task restored</string>
+    <string name="task_deleted">Task deleted</string>
+    <string name="undo">Undo</string>
 </resources>
