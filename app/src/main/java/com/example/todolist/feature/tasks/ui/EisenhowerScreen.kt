@@ -5,9 +5,6 @@ import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -17,7 +14,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -44,7 +40,6 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,20 +53,18 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.todolist.R
 import com.example.todolist.TodoApplication
+import com.example.todolist.core.theme.DarkBackground
+import com.example.todolist.feature.tasks.QuadrantType
+import com.example.todolist.feature.tasks.TaskViewModel
+import com.example.todolist.feature.tasks.TaskViewModelFactory
 import com.example.todolist.feature.tasks.data.Task
 import com.example.todolist.feature.tasks.ui.components.MyBottomBar
 import com.example.todolist.feature.tasks.ui.components.Quadrant
-import com.example.todolist.core.theme.AmberYellow
-import com.example.todolist.core.theme.CoralPink
-import com.example.todolist.core.theme.DarkBackground
-import com.example.todolist.core.theme.SilverGray
-import com.example.todolist.core.theme.SkyBlue
-import com.example.todolist.feature.tasks.TaskViewModel
-import com.example.todolist.feature.tasks.TaskViewModelFactory
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
@@ -85,58 +78,55 @@ fun EisenhowerScreen(
     viewModel: TaskViewModel,
 ) {
     val context = LocalContext.current
+    val prefs = remember { (context.applicationContext as TodoApplication).userPrefs }
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    // State lưu chế độ xem: Lưới 2x2 vs Tab View (vuốt ngang tối ưu cho Pixel)
-    var isGridView by remember { mutableStateOf(loadViewMode(context)) }
+    var isGridView by remember { mutableStateOf(prefs.isGridView) }
+    var backgroundUri by remember { mutableStateOf(prefs.backgroundUri) }
+    var avatarUri by remember { mutableStateOf(prefs.avatarUri) }
 
-    // State quản lý ảnh nền
-    var backgroundUri by remember { mutableStateOf(loadBackgroundUri(context)) }
-    val backgroundPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia()
-    ) { uri ->
-        if (uri != null) {
-            val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
-            context.contentResolver.takePersistableUriPermission(uri, flag)
-            backgroundUri = uri.toString()
-            saveBackgroundUri(context, uri.toString())
-        }
+    val pickBackground = rememberImagePicker { uri ->
+        backgroundUri = uri
+        prefs.backgroundUri = uri
+    }
+    val pickAvatar = rememberImagePicker { uri ->
+        avatarUri = uri
+        prefs.avatarUri = uri
     }
 
-    // State quản lý Avatar
-    var avatarUri by remember { mutableStateOf(loadAvatarUri(context)) }
-    val avatarPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia()
-    ) { uri ->
-        if (uri != null) {
-            val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
-            context.contentResolver.takePersistableUriPermission(uri, flag)
-            avatarUri = uri.toString()
-            saveAvatarUri(context, uri.toString())
-        }
+    val quadrants by viewModel.quadrants.collectAsStateWithLifecycle()
+
+    val onTaskChecked: (Task, Boolean) -> Unit = { task, checked ->
+        viewModel.updateTask(task.copy(isCompleted = checked))
     }
-
-    // Dữ liệu 4 góc
-    val q1Tasks by viewModel.quadrant1Tasks.collectAsState()
-    val q2Tasks by viewModel.quadrant2Tasks.collectAsState()
-    val q3Tasks by viewModel.quadrant3Tasks.collectAsState()
-    val q4Tasks by viewModel.quadrant4Tasks.collectAsState()
-
-    // Hàm xóa có Undo qua Snackbar
+    val taskDeletedMessage = stringResource(R.string.task_deleted)
+    val undoLabel = stringResource(R.string.undo)
     val onDeleteWithUndo: (Task) -> Unit = { task ->
         viewModel.deleteTask(task)
         scope.launch {
             snackbarHostState.currentSnackbarData?.dismiss()
             val result = snackbarHostState.showSnackbar(
-                message = context.getString(R.string.task_deleted),
-                actionLabel = context.getString(R.string.undo),
+                message = taskDeletedMessage,
+                actionLabel = undoLabel,
                 duration = SnackbarDuration.Short
             )
             if (result == SnackbarResult.ActionPerformed) {
                 viewModel.addTask(task)
             }
         }
+    }
+
+    val panel: @Composable (QuadrantType, Modifier) -> Unit = { type, panelModifier ->
+        Quadrant(
+            title = stringResource(type.titleRes),
+            tasks = quadrants.getValue(type),
+            onTaskClick = onTaskClick,
+            onTaskChecked = onTaskChecked,
+            onDeleteTask = onDeleteWithUndo,
+            modifier = panelModifier,
+            backgroundColor = type.color
+        )
     }
 
     Scaffold(
@@ -156,11 +146,7 @@ fun EisenhowerScreen(
                                 .size(36.dp)
                                 .clip(CircleShape)
                                 .border(1.dp, Color.White, CircleShape)
-                                .clickable {
-                                    avatarPickerLauncher.launch(
-                                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                                    )
-                                }
+                                .clickable(onClick = pickAvatar)
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Text(
@@ -173,14 +159,13 @@ fun EisenhowerScreen(
                 actions = {
                     IconButton(
                         onClick = {
-                            val nextMode = !isGridView
-                            isGridView = nextMode
-                            saveViewMode(context, nextMode)
+                            isGridView = !isGridView
+                            prefs.isGridView = isGridView
                         }
                     ) {
                         Icon(
                             imageVector = if (isGridView) Icons.AutoMirrored.Filled.ViewList else Icons.Default.GridView,
-                            contentDescription = if (isGridView) stringResource(R.string.tab_view) else stringResource(R.string.grid_view),
+                            contentDescription = stringResource(if (isGridView) R.string.tab_view else R.string.grid_view),
                             tint = Color.White
                         )
                     }
@@ -194,11 +179,7 @@ fun EisenhowerScreen(
             MyBottomBar(
                 onAddTaskClick = onAddTask,
                 onFinishedTasksClick = onViewFinishedTasks,
-                onChangeBackgroundClick = {
-                    backgroundPickerLauncher.launch(
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                    )
-                }
+                onChangeBackgroundClick = pickBackground
             )
         },
         containerColor = DarkBackground
@@ -223,70 +204,13 @@ fun EisenhowerScreen(
                     .padding(padding)
             ) {
                 if (isGridView) {
-                    // CHẾ ĐỘ 1: LƯỚI 2x2 CỔ ĐIỂN
-                    Column(modifier = Modifier.fillMaxSize()) {
+                    QuadrantType.entries.chunked(2).forEach { rowTypes ->
                         Row(modifier = Modifier.weight(1f)) {
-                            Quadrant(
-                                title = stringResource(R.string.do_first),
-                                tasks = q1Tasks,
-                                onTaskClick = onTaskClick,
-                                onTaskChecked = { task, checked ->
-                                    viewModel.updateTask(task.copy(isCompleted = checked))
-                                },
-                                onDeleteTask = onDeleteWithUndo,
-                                modifier = Modifier.weight(1f),
-                                backgroundColor = CoralPink
-                            )
-
-                            Quadrant(
-                                title = stringResource(R.string.schedule),
-                                tasks = q2Tasks,
-                                onTaskClick = onTaskClick,
-                                onTaskChecked = { task, checked ->
-                                    viewModel.updateTask(task.copy(isCompleted = checked))
-                                },
-                                onDeleteTask = onDeleteWithUndo,
-                                modifier = Modifier.weight(1f),
-                                backgroundColor = SkyBlue
-                            )
-                        }
-
-                        Row(modifier = Modifier.weight(1f)) {
-                            Quadrant(
-                                title = stringResource(R.string.delegate),
-                                tasks = q3Tasks,
-                                onTaskClick = onTaskClick,
-                                onTaskChecked = { task, checked ->
-                                    viewModel.updateTask(task.copy(isCompleted = checked))
-                                },
-                                onDeleteTask = onDeleteWithUndo,
-                                modifier = Modifier.weight(1f),
-                                backgroundColor = AmberYellow
-                            )
-
-                            Quadrant(
-                                title = stringResource(R.string.dont_do),
-                                tasks = q4Tasks,
-                                onTaskClick = onTaskClick,
-                                onTaskChecked = { task, checked ->
-                                    viewModel.updateTask(task.copy(isCompleted = checked))
-                                },
-                                onDeleteTask = onDeleteWithUndo,
-                                modifier = Modifier.weight(1f),
-                                backgroundColor = SilverGray
-                            )
+                            rowTypes.forEach { type -> panel(type, Modifier.weight(1f)) }
                         }
                     }
                 } else {
-                    // CHẾ ĐỘ 2: 4 TAB VUỐT NGANG (TỐI ƯU TUYỆT ĐỐI CHO MÀN HÌNH NHỎ)
-                    val pagerState = rememberPagerState { 4 }
-                    val titles = listOf(
-                        stringResource(R.string.do_first),
-                        stringResource(R.string.schedule),
-                        stringResource(R.string.delegate),
-                        stringResource(R.string.dont_do)
-                    )
-                    val colors = listOf(CoralPink, SkyBlue, AmberYellow, SilverGray)
+                    val pagerState = rememberPagerState { QuadrantType.entries.size }
 
                     ScrollableTabRow(
                         selectedTabIndex = pagerState.currentPage,
@@ -297,21 +221,19 @@ fun EisenhowerScreen(
                             if (pagerState.currentPage < tabPositions.size) {
                                 TabRowDefaults.SecondaryIndicator(
                                     modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
-                                    color = colors[pagerState.currentPage]
+                                    color = QuadrantType.entries[pagerState.currentPage].color
                                 )
                             }
                         }
                     ) {
-                        titles.forEachIndexed { index, title ->
+                        QuadrantType.entries.forEachIndexed { index, type ->
                             Tab(
                                 selected = pagerState.currentPage == index,
-                                onClick = {
-                                    scope.launch { pagerState.animateScrollToPage(index) }
-                                },
+                                onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
                                 text = {
                                     Text(
-                                        text = title,
-                                        color = if (pagerState.currentPage == index) colors[index] else Color.White.copy(alpha = 0.7f)
+                                        text = stringResource(type.titleRes),
+                                        color = if (pagerState.currentPage == index) type.color else Color.White.copy(alpha = 0.7f)
                                     )
                                 }
                             )
@@ -324,52 +246,27 @@ fun EisenhowerScreen(
                             .fillMaxSize()
                             .padding(8.dp)
                     ) { page ->
-                        when (page) {
-                            0 -> Quadrant(
-                                title = titles[0],
-                                tasks = q1Tasks,
-                                onTaskClick = onTaskClick,
-                                onTaskChecked = { task, checked ->
-                                    viewModel.updateTask(task.copy(isCompleted = checked))
-                                },
-                                onDeleteTask = onDeleteWithUndo,
-                                backgroundColor = CoralPink
-                            )
-                            1 -> Quadrant(
-                                title = titles[1],
-                                tasks = q2Tasks,
-                                onTaskClick = onTaskClick,
-                                onTaskChecked = { task, checked ->
-                                    viewModel.updateTask(task.copy(isCompleted = checked))
-                                },
-                                onDeleteTask = onDeleteWithUndo,
-                                backgroundColor = SkyBlue
-                            )
-                            2 -> Quadrant(
-                                title = titles[2],
-                                tasks = q3Tasks,
-                                onTaskClick = onTaskClick,
-                                onTaskChecked = { task, checked ->
-                                    viewModel.updateTask(task.copy(isCompleted = checked))
-                                },
-                                onDeleteTask = onDeleteWithUndo,
-                                backgroundColor = AmberYellow
-                            )
-                            3 -> Quadrant(
-                                title = titles[3],
-                                tasks = q4Tasks,
-                                onTaskClick = onTaskClick,
-                                onTaskChecked = { task, checked ->
-                                    viewModel.updateTask(task.copy(isCompleted = checked))
-                                },
-                                onDeleteTask = onDeleteWithUndo,
-                                backgroundColor = SilverGray
-                            )
-                        }
+                        panel(QuadrantType.entries[page], Modifier)
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun rememberImagePicker(onPicked: (String) -> Unit): () -> Unit {
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        if (uri != null) {
+            context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            onPicked(uri.toString())
+        }
+    }
+    return {
+        launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
 }
 
@@ -382,7 +279,6 @@ fun getTaskViewModel(): TaskViewModel {
     )
 }
 
-// --- Helper Functions ---
 fun getGreeting(context: Context): String {
     val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
     return when (hour) {
@@ -390,43 +286,4 @@ fun getGreeting(context: Context): String {
         in 12..17 -> context.getString(R.string.good_afternoon)
         else -> context.getString(R.string.good_evening)
     }
-}
-
-private fun saveViewMode(context: Context, isGridView: Boolean) {
-    val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-    with(sharedPref.edit()) {
-        putBoolean("is_grid_view", isGridView)
-        apply()
-    }
-}
-
-private fun loadViewMode(context: Context): Boolean {
-    val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-    return sharedPref.getBoolean("is_grid_view", true)
-}
-
-private fun saveBackgroundUri(context: Context, uriString: String) {
-    val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-    with(sharedPref.edit()) {
-        putString("background_uri", uriString)
-        apply()
-    }
-}
-
-private fun loadBackgroundUri(context: Context): String? {
-    val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-    return sharedPref.getString("background_uri", null)
-}
-
-private fun saveAvatarUri(context: Context, uriString: String) {
-    val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-    with(sharedPref.edit()) {
-        putString("avatar_uri", uriString)
-        apply()
-    }
-}
-
-private fun loadAvatarUri(context: Context): String? {
-    val sharedPref = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-    return sharedPref.getString("avatar_uri", null)
 }

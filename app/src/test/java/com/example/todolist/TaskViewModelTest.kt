@@ -3,6 +3,7 @@ package com.example.todolist
 import com.example.todolist.feature.tasks.data.Task
 import com.example.todolist.feature.tasks.data.TaskDao
 import com.example.todolist.feature.tasks.data.TaskRepository
+import com.example.todolist.feature.tasks.QuadrantType
 import com.example.todolist.feature.tasks.TaskViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -80,15 +81,12 @@ class TaskViewModelTest {
         viewModel.addTask(Task(title = "Q3", isImportant = false, isUrgent = true))
         viewModel.addTask(Task(title = "Q4", isImportant = false, isUrgent = false))
 
-        val q1 = viewModel.quadrant1Tasks.first { it.isNotEmpty() }
-        val q2 = viewModel.quadrant2Tasks.first { it.isNotEmpty() }
-        val q3 = viewModel.quadrant3Tasks.first { it.isNotEmpty() }
-        val q4 = viewModel.quadrant4Tasks.first { it.isNotEmpty() }
+        val byType = viewModel.quadrants.first { map -> map.values.all { it.isNotEmpty() } }
 
-        assertEquals("Q1", q1[0].title)
-        assertEquals("Q2", q2[0].title)
-        assertEquals("Q3", q3[0].title)
-        assertEquals("Q4", q4[0].title)
+        assertEquals(listOf("Q1"), byType.getValue(QuadrantType.DO_FIRST).map { it.title })
+        assertEquals(listOf("Q2"), byType.getValue(QuadrantType.SCHEDULE).map { it.title })
+        assertEquals(listOf("Q3"), byType.getValue(QuadrantType.DELEGATE).map { it.title })
+        assertEquals(listOf("Q4"), byType.getValue(QuadrantType.DONT_DO).map { it.title })
     }
 
     @Test

@@ -23,21 +23,16 @@ class TaskViewModel(
     val activeTasks = repository.activeTasks
     val completedTasks = repository.completedTasks
 
-    val quadrant1Tasks: StateFlow<List<Task>> = activeTasks
-        .map { tasks -> tasks.filter { it.isImportant && it.isUrgent } }
-        .stateIn(scope, SharingStarted.WhileSubscribed(5000), emptyList())
-
-    val quadrant2Tasks: StateFlow<List<Task>> = activeTasks
-        .map { tasks -> tasks.filter { it.isImportant && !it.isUrgent } }
-        .stateIn(scope, SharingStarted.WhileSubscribed(5000), emptyList())
-
-    val quadrant3Tasks: StateFlow<List<Task>> = activeTasks
-        .map { tasks -> tasks.filter { !it.isImportant && it.isUrgent } }
-        .stateIn(scope, SharingStarted.WhileSubscribed(5000), emptyList())
-
-    val quadrant4Tasks: StateFlow<List<Task>> = activeTasks
-        .map { tasks -> tasks.filter { !it.isImportant && !it.isUrgent } }
-        .stateIn(scope, SharingStarted.WhileSubscribed(5000), emptyList())
+    val quadrants: StateFlow<Map<QuadrantType, List<Task>>> = activeTasks
+        .map { tasks ->
+            val byType = tasks.groupBy(QuadrantType::of)
+            QuadrantType.entries.associateWith { byType[it].orEmpty() }
+        }
+        .stateIn(
+            scope,
+            SharingStarted.WhileSubscribed(5000),
+            QuadrantType.entries.associateWith { emptyList() }
+        )
 
     fun restoreTask(task: Task) {
         scope.launch {
