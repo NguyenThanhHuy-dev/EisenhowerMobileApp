@@ -20,8 +20,6 @@ import org.junit.Test
 class FakeTaskDao : TaskDao {
     private val tasks = MutableStateFlow<List<Task>>(emptyList())
 
-    override fun getAllTasks(): Flow<List<Task>> = tasks
-
     override fun getActiveTasks(): Flow<List<Task>> =
         tasks.map { list -> list.filter { !it.isCompleted } }
 
@@ -35,9 +33,10 @@ class FakeTaskDao : TaskDao {
     override fun getTaskById(taskId: Long): Flow<Task?> =
         tasks.map { list -> list.find { it.id == taskId } }
 
-    override suspend fun insertTask(task: Task) {
+    override suspend fun insertTask(task: Task): Long {
         val nextId = if (task.id == 0L) (tasks.value.maxOfOrNull { it.id } ?: 0L) + 1 else task.id
         tasks.value = tasks.value + task.copy(id = nextId)
+        return nextId
     }
 
     override suspend fun updateTask(task: Task) {

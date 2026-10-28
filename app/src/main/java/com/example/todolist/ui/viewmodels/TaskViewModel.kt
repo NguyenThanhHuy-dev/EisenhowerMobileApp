@@ -20,7 +20,6 @@ class TaskViewModel(
     private val scope: CoroutineScope
         get() = externalScope ?: viewModelScope
 
-    val allTasks = repository.allTasks
     val activeTasks = repository.activeTasks
     val completedTasks = repository.completedTasks
 

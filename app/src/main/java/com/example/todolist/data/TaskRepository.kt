@@ -4,7 +4,6 @@ package com.example.todolist.data
 import kotlinx.coroutines.flow.Flow
 
 class TaskRepository(private val taskDao: TaskDao) {
-    val allTasks: Flow<List<Task>> = taskDao.getAllTasks()
     val activeTasks: Flow<List<Task>> = taskDao.getActiveTasks()
     val completedTasks: Flow<List<Task>> = taskDao.getCompletedTasks()
 
