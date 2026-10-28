@@ -1,4 +1,4 @@
-package com.example.todolist.utils
+package com.example.todolist.core.audio
 
 import android.content.Context
 import android.media.AudioAttributes

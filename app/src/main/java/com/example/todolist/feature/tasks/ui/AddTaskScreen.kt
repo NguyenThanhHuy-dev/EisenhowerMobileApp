@@ -1,5 +1,6 @@
-package com.example.todolist.ui.tasks
+package com.example.todolist.feature.tasks.ui
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,54 +21,68 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.todolist.core.ui.GreetingImage
 import com.example.todolist.R
-import com.example.todolist.ui.viewmodels.TaskViewModel
+import com.example.todolist.feature.tasks.data.Task
+import com.example.todolist.feature.tasks.TaskViewModel
+import com.example.todolist.core.audio.SoundPlayer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaskDetailScreen(
-    taskId: Long,
-    viewModel: TaskViewModel,
+fun AddTaskScreen(
     onBack: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: TaskViewModel
 ) {
-    val taskState by viewModel.getTaskById(taskId).collectAsState(initial = null)
+    var title by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var isImportant by remember { mutableStateOf(false) }
+    var isUrgent by remember { mutableStateOf(false) }
 
-    taskState?.let { task ->
-        var title by remember(task.title) { mutableStateOf(task.title) }
-        var description by remember(task.description) { mutableStateOf(task.description) }
-        var isImportant by remember(task.isImportant) { mutableStateOf(task.isImportant) }
-        var isUrgent by remember(task.isUrgent) { mutableStateOf(task.isUrgent) }
-
-        Scaffold(
-            topBar = {
-                CenterAlignedTopAppBar(
-                    title = { Text(stringResource(R.string.edit_task)) },
-                    navigationIcon = {
-                        IconButton(onClick = onBack) {
-                            Icon(
-                                Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = stringResource(R.string.back)
-                            )
-                        }
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(R.string.add_new_task),
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
                     }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color.Transparent
                 )
-            }
-        ) { padding ->
+            )
+        }
+    ) { padding ->
+        GreetingImage(imageResId = R.drawable.wave1, alpha = 0.35f)
+
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding)
                     .padding(16.dp)
             ) {
                 OutlinedTextField(
@@ -83,7 +98,7 @@ fun TaskDetailScreen(
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },
-                    label = { Text(stringResource(R.string.task_description)) },
+                    label = { Text(stringResource(R.string.task_description_optional)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(120.dp),
@@ -91,6 +106,14 @@ fun TaskDetailScreen(
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
+
+                Text(
+                    text = stringResource(R.string.eisenhower_matrix_classification),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -101,7 +124,10 @@ fun TaskDetailScreen(
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.weight(1f)
                     )
-                    Switch(checked = isImportant, onCheckedChange = { isImportant = it })
+                    Switch(
+                        checked = isImportant,
+                        onCheckedChange = { isImportant = it }
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -115,26 +141,32 @@ fun TaskDetailScreen(
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.weight(1f)
                     )
-                    Switch(checked = isUrgent, onCheckedChange = { isUrgent = it })
+                    Switch(
+                        checked = isUrgent,
+                        onCheckedChange = { isUrgent = it }
+                    )
                 }
 
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(32.dp))
 
                 Button(
                     onClick = {
-                        val updatedTask = task.copy(
-                            title = title.trim(),
-                            description = description.trim(),
-                            isImportant = isImportant,
-                            isUrgent = isUrgent
-                        )
-                        viewModel.updateTask(updatedTask)
-                        onBack()
+                        if (title.isNotBlank()) {
+                            val task = Task(
+                                title = title.trim(),
+                                description = description.trim(),
+                                isImportant = isImportant,
+                                isUrgent = isUrgent
+                            )
+                            viewModel.addTask(task)
+                            SoundPlayer.playAddSound()
+                            onBack()
+                        }
                     },
                     modifier = Modifier.fillMaxWidth(),
                     enabled = title.isNotBlank()
                 ) {
-                    Text(stringResource(R.string.save_changes))
+                    Text(stringResource(R.string.add_task_button))
                 }
             }
         }

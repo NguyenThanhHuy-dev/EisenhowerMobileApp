@@ -1,4 +1,4 @@
-package com.example.todolist.ui.theme
+package com.example.todolist.core.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

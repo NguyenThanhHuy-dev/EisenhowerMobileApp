@@ -1,10 +1,10 @@
-package com.example.todolist.ui.viewmodels
+package com.example.todolist.feature.tasks
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.todolist.data.Task
-import com.example.todolist.data.TaskRepository
+import com.example.todolist.feature.tasks.data.Task
+import com.example.todolist.feature.tasks.data.TaskRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted

@@ -1,4 +1,4 @@
-package com.example.todolist.utils
+package com.example.todolist.feature.tasks.reminder
 
 import android.app.AlarmManager
 import android.app.NotificationChannel
@@ -11,7 +11,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.example.todolist.MainActivity
 import com.example.todolist.R
-import com.example.todolist.data.Task
+import com.example.todolist.feature.tasks.data.Task
 
 const val REMINDER_CHANNEL_ID = "task_reminders_channel"
 const val EXTRA_TASK_ID = "extra_task_id"

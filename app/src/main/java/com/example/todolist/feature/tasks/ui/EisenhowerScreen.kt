@@ -1,4 +1,4 @@
-package com.example.todolist.ui.tasks
+package com.example.todolist.feature.tasks.ui
 
 import android.content.Context
 import android.content.Intent
@@ -62,16 +62,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.todolist.R
 import com.example.todolist.TodoApplication
-import com.example.todolist.data.Task
-import com.example.todolist.ui.components.MyBottomBar
-import com.example.todolist.ui.components.Quadrant
-import com.example.todolist.ui.theme.AmberYellow
-import com.example.todolist.ui.theme.CoralPink
-import com.example.todolist.ui.theme.DarkBackground
-import com.example.todolist.ui.theme.SilverGray
-import com.example.todolist.ui.theme.SkyBlue
-import com.example.todolist.ui.viewmodels.TaskViewModel
-import com.example.todolist.ui.viewmodels.TaskViewModelFactory
+import com.example.todolist.feature.tasks.data.Task
+import com.example.todolist.feature.tasks.ui.components.MyBottomBar
+import com.example.todolist.feature.tasks.ui.components.Quadrant
+import com.example.todolist.core.theme.AmberYellow
+import com.example.todolist.core.theme.CoralPink
+import com.example.todolist.core.theme.DarkBackground
+import com.example.todolist.core.theme.SilverGray
+import com.example.todolist.core.theme.SkyBlue
+import com.example.todolist.feature.tasks.TaskViewModel
+import com.example.todolist.feature.tasks.TaskViewModelFactory
 import kotlinx.coroutines.launch
 import java.util.Calendar
 

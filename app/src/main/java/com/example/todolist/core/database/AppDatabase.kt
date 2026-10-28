@@ -1,4 +1,7 @@
-package com.example.todolist.data
+package com.example.todolist.core.database
+
+import com.example.todolist.feature.tasks.data.Task
+import com.example.todolist.feature.tasks.data.TaskDao
 
 import android.content.Context
 import androidx.room.Database

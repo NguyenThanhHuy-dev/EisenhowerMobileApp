@@ -1,5 +1,5 @@
 // app/src/main/java/com/example/todolist/data/TaskDao.kt
-package com.example.todolist.data
+package com.example.todolist.feature.tasks.data
 
 import androidx.room.Dao
 import androidx.room.Delete

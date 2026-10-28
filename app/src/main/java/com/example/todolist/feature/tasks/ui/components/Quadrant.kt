@@ -1,4 +1,4 @@
-package com.example.todolist.ui.components
+package com.example.todolist.feature.tasks.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -30,8 +30,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.todolist.R
-import com.example.todolist.data.Task
-import com.example.todolist.utils.SoundPlayer
+import com.example.todolist.feature.tasks.data.Task
+import com.example.todolist.core.audio.SoundPlayer
 
 @Composable
 fun Quadrant(

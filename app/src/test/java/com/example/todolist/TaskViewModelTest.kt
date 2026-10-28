@@ -1,9 +1,9 @@
 package com.example.todolist
 
-import com.example.todolist.data.Task
-import com.example.todolist.data.TaskDao
-import com.example.todolist.data.TaskRepository
-import com.example.todolist.ui.viewmodels.TaskViewModel
+import com.example.todolist.feature.tasks.data.Task
+import com.example.todolist.feature.tasks.data.TaskDao
+import com.example.todolist.feature.tasks.data.TaskRepository
+import com.example.todolist.feature.tasks.TaskViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

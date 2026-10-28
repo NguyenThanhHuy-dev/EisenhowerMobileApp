@@ -1,4 +1,4 @@
-package com.example.todolist.ui.tasks
+package com.example.todolist.feature.tasks.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,9 +34,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.todolist.R
-import com.example.todolist.ui.components.TaskCard
-import com.example.todolist.ui.viewmodels.TaskViewModel
-import com.example.todolist.utils.SoundPlayer
+import com.example.todolist.feature.tasks.ui.components.TaskCard
+import com.example.todolist.feature.tasks.TaskViewModel
+import com.example.todolist.core.audio.SoundPlayer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

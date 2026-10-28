@@ -1,4 +1,4 @@
-package com.example.todolist.ui.components
+package com.example.todolist.feature.tasks.ui.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.interaction.MutableInteractionSource

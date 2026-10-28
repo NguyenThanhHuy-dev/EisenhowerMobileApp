@@ -1,5 +1,5 @@
 // app/src/main/java/com/example/todolist/data/TaskRepository.kt
-package com.example.todolist.data
+package com.example.todolist.feature.tasks.data
 
 import kotlinx.coroutines.flow.Flow
 

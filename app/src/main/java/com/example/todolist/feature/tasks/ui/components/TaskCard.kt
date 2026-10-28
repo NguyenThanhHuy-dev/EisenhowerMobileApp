@@ -1,4 +1,4 @@
-package com.example.todolist.ui.components
+package com.example.todolist.feature.tasks.ui.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
@@ -43,7 +43,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.todolist.R
-import com.example.todolist.data.Task
+import com.example.todolist.feature.tasks.data.Task
 
 @Composable
 fun TaskCard(
