@@ -131,6 +131,7 @@ fun Quadrant(
             ) {
                 items(tasks, key = { it.id }) { task ->
                     TaskCard(
+                        modifier = Modifier.animateItem(),
                         task = task,
                         accentColor = backgroundColor,
                         onClick = { onTaskClick(task.id) },

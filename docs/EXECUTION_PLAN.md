@@ -55,6 +55,17 @@ Cải tiến toàn diện ứng dụng Eisenhower ToDoList về mặt: Logic ngh
 2. Date/Time Picker trong màn hình thêm và sửa task.
 3. Lên lịch thông báo với AlarmManager / WorkManager.
 
+
+### Giai đoạn 5: Dọn code, cấu trúc, UX, hiệu suất (2026-10-28) [HOÀN THÀNH, chưa push]
+Nhánh `refactor/cleanup-and-ux`. Mỗi bước một commit, unit test và build debug/release đều qua.
+1. **An toàn dữ liệu:** bỏ `fallbackToDestructiveMigration`, bật `exportSchema`, truy vấn có `ORDER BY` (hạn chót, rồi ngày tạo), xóa `getAllTasks` không dùng.
+2. **Cấu trúc package:** `core/{database,theme,audio,prefs,ui}`, `feature/tasks/{data,reminder,ui,ui/components}`, `navigation/`.
+3. **Gom code lặp:** `QuadrantType` (enum 4 góc), `QuadrantStyle`, `UserPrefs`; `TaskViewModel.quadrants` thay 4 StateFlow; `EisenhowerScreen` 431 -> khoảng 290 dòng.
+4. **UX:** giao diện theo hệ thống (bỏ nền tối cố định, bỏ màu chữ cứng trong Typography), vuốt trái xóa (có Undo), vuốt phải hoàn thành, nút `+` thêm nhanh ở từng góc (điền sẵn Important/Urgent), tương phản chữ.
+5. **Hiệu suất:** `TaskCard` bỏ `IntrinsicSize.Min`, định dạng ngày dùng `remember`, bỏ lớp phủ toàn màn hình, `collectAsStateWithLifecycle`, bật R8 + shrinkResources cho release, `animateItem()` cho danh sách.
+
+**Việc còn lại:** nối `TaskReminderManager.scheduleReminder` vào luồng thêm/sửa task và xin quyền thông báo (hiện chưa được gọi ở đâu); thêm chọn hạn chót ở `AddTaskScreen`; tính năng "Cần mua" (tạm hoãn); đo hiệu năng trên máy thật.
+
 ---
 
 ## 4. Kế hoạch Xác minh (Verification)
