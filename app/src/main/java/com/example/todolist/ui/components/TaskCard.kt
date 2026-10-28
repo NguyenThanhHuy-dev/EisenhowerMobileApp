@@ -21,6 +21,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
@@ -134,6 +136,38 @@ fun TaskCard(
                     )
                 }
 
+                if (task.dueDate != null) {
+                    Spacer(modifier = Modifier.height(6.dp))
+                    val isOverdue = task.dueDate < System.currentTimeMillis() && !task.isCompleted
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(6.dp))
+                            .background(
+                                if (isOverdue) MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.7f)
+                                else MaterialTheme.colorScheme.surfaceVariant
+                            )
+                            .padding(horizontal = 6.dp, vertical = 2.dp)
+                    ) {
+                        Icon(
+                            imageVector = if (isOverdue) Icons.Default.Warning else Icons.Default.Schedule,
+                            contentDescription = null,
+                            modifier = Modifier.size(12.dp),
+                            tint = if (isOverdue) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = if (isOverdue) {
+                                "${formatDueDate(task.dueDate)} (${stringResource(R.string.overdue)})"
+                            } else {
+                                formatDueDate(task.dueDate)
+                            },
+                            style = MaterialTheme.typography.labelSmall,
+                            color = if (isOverdue) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+
                 Row(
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.fillMaxWidth()
@@ -153,4 +187,9 @@ fun TaskCard(
             }
         }
     }
+}
+
+private fun formatDueDate(timestamp: Long): String {
+    val sdf = java.text.SimpleDateFormat("dd/MM HH:mm", java.util.Locale.getDefault())
+    return sdf.format(java.util.Date(timestamp))
 }

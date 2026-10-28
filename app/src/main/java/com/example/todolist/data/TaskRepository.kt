@@ -13,8 +13,8 @@ class TaskRepository(private val taskDao: TaskDao) {
     }
 
 
-    suspend fun addTask(task: Task) {
-        taskDao.insertTask(task)
+    suspend fun addTask(task: Task): Long {
+        return taskDao.insertTask(task)
     }
 
     suspend fun updateTask(task: Task) {

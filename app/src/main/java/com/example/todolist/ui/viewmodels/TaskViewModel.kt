@@ -52,9 +52,10 @@ class TaskViewModel(
         }
     }
 
-    fun addTask(task: Task) {
+    fun addTask(task: Task, onInserted: ((Long) -> Unit)? = null) {
         scope.launch {
-            repository.addTask(task)
+            val id = repository.addTask(task)
+            onInserted?.invoke(id)
         }
     }
 

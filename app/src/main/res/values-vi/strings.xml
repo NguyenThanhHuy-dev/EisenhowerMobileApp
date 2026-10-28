@@ -35,4 +35,11 @@
     <string name="undo">Hoàn tác</string>
     <string name="grid_view">Chế độ lưới</string>
     <string name="tab_view">Chế độ từng thẻ</string>
+    <string name="due_date">Hạn chót</string>
+    <string name="select_due_date">Chọn ngày &amp; giờ hạn chót</string>
+    <string name="clear_due_date">Xóa</string>
+    <string name="overdue">Quá hạn</string>
+    <string name="task_reminder_channel">Nhắc nhở công việc</string>
+    <string name="task_reminder_desc">Thông báo nhắc nhở khi đến hạn công việc</string>
+    <string name="task_reminder_due_now">Đã đến hạn chót công việc!</string>
 </resources>

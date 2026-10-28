@@ -1,4 +1,3 @@
-// app/src/main/java/com/example/todolist/data/Task.kt
 package com.example.todolist.data
 
 import androidx.room.Entity
@@ -12,6 +11,6 @@ data class Task(
     val isImportant: Boolean,
     val isUrgent: Boolean,
     val createdAt: Long = System.currentTimeMillis(),
-    val isCompleted: Boolean = false
-) {}
-
+    val isCompleted: Boolean = false,
+    val dueDate: Long? = null
+)
