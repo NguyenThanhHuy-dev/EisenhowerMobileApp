@@ -15,7 +15,8 @@ import kotlinx.coroutines.launch
 
 class TaskViewModel(
     private val repository: TaskRepository,
-    private val externalScope: CoroutineScope? = null
+    private val externalScope: CoroutineScope? = null,
+    private val clock: () -> Long = System::currentTimeMillis
 ) : ViewModel() {
     private val scope: CoroutineScope
         get() = externalScope ?: viewModelScope
@@ -34,11 +35,15 @@ class TaskViewModel(
             QuadrantType.entries.associateWith { emptyList() }
         )
 
-    fun restoreTask(task: Task) {
+    fun setCompleted(task: Task, completed: Boolean) {
         scope.launch {
-            repository.updateTask(task.copy(isCompleted = false))
+            repository.updateTask(
+                task.copy(isCompleted = completed, completedAt = if (completed) clock() else null)
+            )
         }
     }
+
+    fun restoreTask(task: Task) = setCompleted(task, completed = false)
 
     fun clearCompletedTasks() {
         scope.launch {

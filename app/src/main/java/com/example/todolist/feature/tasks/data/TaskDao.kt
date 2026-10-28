@@ -16,7 +16,8 @@ interface TaskDao {
     )
     fun getActiveTasks(): Flow<List<Task>>
 
-    @Query("SELECT * FROM tasks WHERE isCompleted = 1 ORDER BY createdAt DESC")
+    @Query("SELECT * FROM tasks WHERE isCompleted = 1 " +
+            "ORDER BY completedAt IS NULL, completedAt DESC, createdAt DESC")
     fun getCompletedTasks(): Flow<List<Task>>
 
     @Query("DELETE FROM tasks WHERE isCompleted = 1")

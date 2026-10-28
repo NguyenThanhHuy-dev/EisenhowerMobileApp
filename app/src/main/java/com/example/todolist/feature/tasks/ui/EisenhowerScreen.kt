@@ -97,7 +97,7 @@ fun EisenhowerScreen(
     val quadrants by viewModel.quadrants.collectAsStateWithLifecycle()
 
     val onTaskChecked: (Task, Boolean) -> Unit = { task, checked ->
-        viewModel.updateTask(task.copy(isCompleted = checked))
+        viewModel.setCompleted(task, checked)
     }
     val taskDeletedMessage = stringResource(R.string.task_deleted)
     val undoLabel = stringResource(R.string.undo)

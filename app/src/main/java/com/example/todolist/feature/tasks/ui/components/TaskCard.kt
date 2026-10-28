@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.DoneAll
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
@@ -217,10 +218,29 @@ private fun TaskCardContent(
                 )
             }
 
+            if (task.isCompleted && task.completedAt != null) {
+                Spacer(modifier = Modifier.height(6.dp))
+                val doneText = remember(task.completedAt) { formatDateTime(task.completedAt) }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.DoneAll,
+                        contentDescription = null,
+                        modifier = Modifier.size(14.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = stringResource(R.string.completed_at, doneText),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+
             if (task.dueDate != null) {
                 Spacer(modifier = Modifier.height(6.dp))
                 val isOverdue = task.dueDate < System.currentTimeMillis() && !task.isCompleted
-                val dueText = remember(task.dueDate) { formatDueDate(task.dueDate) }
+                val dueText = remember(task.dueDate) { formatDateTime(task.dueDate) }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -249,7 +269,7 @@ private fun TaskCardContent(
     }
 }
 
-private fun formatDueDate(timestamp: Long): String {
+private fun formatDateTime(timestamp: Long): String {
     val sdf = java.text.SimpleDateFormat("dd/MM HH:mm", java.util.Locale.getDefault())
     return sdf.format(java.util.Date(timestamp))
 }

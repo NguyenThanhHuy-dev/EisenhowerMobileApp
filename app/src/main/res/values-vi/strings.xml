@@ -43,4 +43,12 @@
     <string name="task_reminder_desc">Thông báo nhắc nhở khi đến hạn công việc</string>
     <string name="task_reminder_due_now">Đã đến hạn chót công việc!</string>
     <string name="add_to_quadrant">Thêm việc vào %1$s</string>
+    <string name="completed_at">Hoàn thành lúc %1$s</string>
+    <string name="hint_do_first">Quan trọng · Khẩn cấp</string>
+    <string name="hint_schedule">Quan trọng · Không khẩn cấp</string>
+    <string name="hint_delegate">Không quan trọng · Khẩn cấp</string>
+    <string name="hint_dont_do">Không quan trọng · Không khẩn cấp</string>
+    <string name="new_task">Việc mới</string>
+    <string name="what_needs_doing">Bạn cần làm gì?</string>
+    <string name="priority">Mức ưu tiên</string>
 </resources>

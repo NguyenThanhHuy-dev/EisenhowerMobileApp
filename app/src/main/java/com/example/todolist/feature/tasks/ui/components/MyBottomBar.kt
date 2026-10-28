@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.*
@@ -39,7 +39,7 @@ fun MyBottomBar(
                 // Nút xem task đã hoàn thành
                 IconButton(onClick = onFinishedTasksClick) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.List,
+                        imageVector = Icons.Default.History,
                         contentDescription = androidx.compose.ui.res.stringResource(com.example.todolist.R.string.finished_tasks)
                     )
                 }

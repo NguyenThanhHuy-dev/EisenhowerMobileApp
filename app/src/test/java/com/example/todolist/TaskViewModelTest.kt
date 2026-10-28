@@ -105,6 +105,22 @@ class TaskViewModelTest {
     }
 
     @Test
+    fun setCompleted_shouldStampCompletionTimeAndRestoreShouldClearIt() = runBlocking {
+        val clocked = TaskViewModel(repository, testScope, clock = { 1234L })
+        val task = Task(id = 1, title = "Stamp", isImportant = true, isUrgent = true)
+        clocked.addTask(task)
+
+        clocked.setCompleted(task, completed = true)
+        val done = clocked.completedTasks.first { it.isNotEmpty() }
+        assertEquals(1234L, done[0].completedAt)
+
+        clocked.restoreTask(done[0])
+        val active = clocked.activeTasks.first { it.isNotEmpty() }
+        assertEquals(null, active[0].completedAt)
+        assertFalse(active[0].isCompleted)
+    }
+
+    @Test
     fun restoreTask_shouldMoveBackToActiveTasks() = runBlocking {
         val task = Task(id = 1, title = "Review PR", isImportant = true, isUrgent = true, isCompleted = true)
         fakeDao.insertTask(task)

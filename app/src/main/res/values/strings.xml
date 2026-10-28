@@ -43,4 +43,12 @@
     <string name="task_reminder_desc">Notifications for task deadlines</string>
     <string name="task_reminder_due_now">Task deadline is now!</string>
     <string name="add_to_quadrant">Add task to %1$s</string>
+    <string name="completed_at">Completed %1$s</string>
+    <string name="hint_do_first">Important · Urgent</string>
+    <string name="hint_schedule">Important · Not urgent</string>
+    <string name="hint_delegate">Not important · Urgent</string>
+    <string name="hint_dont_do">Not important · Not urgent</string>
+    <string name="new_task">New task</string>
+    <string name="what_needs_doing">What needs to be done?</string>
+    <string name="priority">Priority</string>
 </resources>

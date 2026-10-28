@@ -66,6 +66,13 @@ Nhánh `refactor/cleanup-and-ux`. Mỗi bước một commit, unit test và buil
 
 **Việc còn lại:** nối `TaskReminderManager.scheduleReminder` vào luồng thêm/sửa task và xin quyền thông báo (hiện chưa được gọi ở đâu); thêm chọn hạn chót ở `AddTaskScreen`; tính năng "Cần mua" (tạm hoãn); đo hiệu năng trên máy thật.
 
+
+### Giai đoạn 6: Thời gian hoàn thành, icon lịch sử, thiết kế lại Add task (2026-10-28) [HOÀN THÀNH, chưa push]
+1. `Task.completedAt` (Room v3, `MIGRATION_2_3`, schema `3.json`). `TaskViewModel.setCompleted` ghi thời điểm hoàn thành, `restoreTask` xóa. Danh sách đã xong sắp theo thời điểm hoàn thành mới nhất. Task hoàn thành trước bản này không có giờ (hiện không có dòng giờ).
+2. Icon nút lịch sử ở thanh dưới: `List` -> `History`. Thẻ task đã xong hiện "Hoàn thành lúc dd/MM HH:mm".
+3. Màn Add new task: bỏ ảnh `wave1` (xóa `GreetingImage`), tiêu đề lớn, 4 thẻ ưu tiên có icon và mô tả thay 2 công tắc, nền chuyển màu theo góc đang chọn, nút lưu ghim dưới đáy.
+4. Đã thử trên giả lập: nâng DB v2 -> v3 giữ nguyên task cũ, không lỗi.
+
 ---
 
 ## 4. Kế hoạch Xác minh (Verification)

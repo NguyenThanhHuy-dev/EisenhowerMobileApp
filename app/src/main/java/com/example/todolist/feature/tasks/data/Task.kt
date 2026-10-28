@@ -12,5 +12,6 @@ data class Task(
     val isUrgent: Boolean,
     val createdAt: Long = System.currentTimeMillis(),
     val isCompleted: Boolean = false,
-    val dueDate: Long? = null
+    val dueDate: Long? = null,
+    val completedAt: Long? = null
 )
