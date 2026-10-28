@@ -41,7 +41,7 @@
     <string name="overdue">Overdue</string>
     <string name="task_reminder_channel">Task Reminders</string>
     <string name="task_reminder_desc">Notifications for task deadlines</string>
-    <string name="task_reminder_due_now">Task deadline is now!</string>
+    <string name="task_reminder_due_now">This task is not finished yet</string>
     <string name="add_to_quadrant">Add task to %1$s</string>
     <string name="completed_at">Completed %1$s</string>
     <string name="hint_do_first">Important · Urgent</string>
@@ -51,4 +51,14 @@
     <string name="new_task">New task</string>
     <string name="what_needs_doing">What needs to be done?</string>
     <string name="priority">Priority</string>
+    <string name="reminder_title">Remind me</string>
+    <string name="reminder_none">No reminder</string>
+    <string name="reminder_15_min">15 min</string>
+    <string name="reminder_30_min">30 min</string>
+    <string name="reminder_1_hour">1 hour</string>
+    <string name="reminder_3_hours">3 hours</string>
+    <string name="reminder_tomorrow">Tomorrow 9:00</string>
+    <string name="reminder_summary">We will remind you at %1$s if this task is not done</string>
+    <string name="reminder_may_be_late">The reminder may arrive a few minutes late</string>
+    <string name="reminder_allow_exact">Allow exact</string>
 </resources>

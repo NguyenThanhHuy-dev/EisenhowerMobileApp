@@ -3,6 +3,7 @@ package com.example.todolist
 import com.example.todolist.feature.tasks.data.Task
 import com.example.todolist.feature.tasks.data.TaskDao
 import com.example.todolist.feature.tasks.data.TaskRepository
+import com.example.todolist.feature.tasks.reminder.ReminderScheduler
 import com.example.todolist.feature.tasks.QuadrantType
 import com.example.todolist.feature.tasks.TaskViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -47,6 +48,13 @@ class FakeTaskDao : TaskDao {
     override suspend fun deleteTask(task: Task) {
         tasks.value = tasks.value.filter { it.id != task.id }
     }
+}
+
+class RecordingScheduler : ReminderScheduler {
+    val scheduled = mutableListOf<Task>()
+    val cancelled = mutableListOf<Long>()
+    override fun schedule(task: Task) { scheduled += task }
+    override fun cancel(taskId: Long) { cancelled += taskId }
 }
 
 class TaskViewModelTest {
@@ -160,5 +168,47 @@ class TaskViewModelTest {
 
         val active = viewModel.activeTasks.first()
         assertTrue(active.isEmpty())
+    }
+
+    @Test
+    fun addTask_shouldScheduleReminderWithInsertedId() = runBlocking {
+        val scheduler = RecordingScheduler()
+        val vm = TaskViewModel(repository, testScope, reminders = scheduler)
+
+        vm.addTask(Task(title = "Remind", isImportant = true, isUrgent = true, dueDate = 5_000L))
+
+        assertEquals(1, scheduler.scheduled.size)
+        assertEquals(1L, scheduler.scheduled[0].id)
+        assertEquals(5_000L, scheduler.scheduled[0].dueDate)
+    }
+
+    @Test
+    fun completingTask_shouldCancelReminder_andRestoringShouldScheduleAgain() = runBlocking {
+        val scheduler = RecordingScheduler()
+        val vm = TaskViewModel(repository, testScope, reminders = scheduler)
+        val task = Task(id = 7, title = "Done soon", isImportant = false, isUrgent = false, dueDate = 9_000L)
+        fakeDao.insertTask(task)
+
+        vm.setCompleted(task, completed = true)
+        assertEquals(listOf(7L), scheduler.cancelled)
+
+        vm.restoreTask(task)
+        assertEquals(listOf(7L), scheduler.scheduled.map { it.id })
+        assertFalse(scheduler.scheduled[0].isCompleted)
+    }
+
+    @Test
+    fun deleteAndEditTask_shouldKeepRemindersInSync() = runBlocking {
+        val scheduler = RecordingScheduler()
+        val vm = TaskViewModel(repository, testScope, reminders = scheduler)
+        val task = Task(id = 3, title = "Edit me", isImportant = true, isUrgent = false, dueDate = 1_000L)
+        fakeDao.insertTask(task)
+
+        vm.updateTask(task.copy(dueDate = 2_000L))
+        assertEquals(listOf(3L), scheduler.cancelled)
+        assertEquals(2_000L, scheduler.scheduled.last().dueDate)
+
+        vm.deleteTask(task)
+        assertEquals(listOf(3L, 3L), scheduler.cancelled)
     }
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.todolist.feature.tasks.data.Task
 import com.example.todolist.feature.tasks.data.TaskRepository
+import com.example.todolist.feature.tasks.reminder.ReminderScheduler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -16,7 +17,8 @@ import kotlinx.coroutines.launch
 class TaskViewModel(
     private val repository: TaskRepository,
     private val externalScope: CoroutineScope? = null,
-    private val clock: () -> Long = System::currentTimeMillis
+    private val clock: () -> Long = System::currentTimeMillis,
+    private val reminders: ReminderScheduler = ReminderScheduler.None
 ) : ViewModel() {
     private val scope: CoroutineScope
         get() = externalScope ?: viewModelScope
@@ -37,9 +39,9 @@ class TaskViewModel(
 
     fun setCompleted(task: Task, completed: Boolean) {
         scope.launch {
-            repository.updateTask(
-                task.copy(isCompleted = completed, completedAt = if (completed) clock() else null)
-            )
+            val updated = task.copy(isCompleted = completed, completedAt = if (completed) clock() else null)
+            repository.updateTask(updated)
+            if (completed) reminders.cancel(updated.id) else reminders.schedule(updated)
         }
     }
 
@@ -54,6 +56,7 @@ class TaskViewModel(
     fun addTask(task: Task, onInserted: ((Long) -> Unit)? = null) {
         scope.launch {
             val id = repository.addTask(task)
+            reminders.schedule(task.copy(id = id))
             onInserted?.invoke(id)
         }
     }
@@ -61,12 +64,15 @@ class TaskViewModel(
     fun updateTask(task: Task) {
         scope.launch {
             repository.updateTask(task)
+            reminders.cancel(task.id)
+            reminders.schedule(task)
         }
     }
 
     fun deleteTask(task: Task) {
         scope.launch {
             repository.deleteTask(task)
+            reminders.cancel(task.id)
         }
     }
 
@@ -75,11 +81,14 @@ class TaskViewModel(
     }
 }
 
-class TaskViewModelFactory(private val repository: TaskRepository) : ViewModelProvider.Factory {
+class TaskViewModelFactory(
+    private val repository: TaskRepository,
+    private val reminders: ReminderScheduler = ReminderScheduler.None
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TaskViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return TaskViewModel(repository) as T
+            return TaskViewModel(repository, reminders = reminders) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

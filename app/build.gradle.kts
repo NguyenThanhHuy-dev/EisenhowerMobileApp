@@ -13,8 +13,10 @@ android {
         applicationId = "com.example.todolist"
         minSdk = 24
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        // versionCode = major * 10000 + minor * 100 + patch; every release must be higher than the last
+        // (installed builds so far all shipped versionCode 1), and update from them with the same signing key.
+        versionCode = 10100
+        versionName = "1.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

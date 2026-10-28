@@ -73,6 +73,14 @@ Nhánh `refactor/cleanup-and-ux`. Mỗi bước một commit, unit test và buil
 3. Màn Add new task: bỏ ảnh `wave1` (xóa `GreetingImage`), tiêu đề lớn, 4 thẻ ưu tiên có icon và mô tả thay 2 công tắc, nền chuyển màu theo góc đang chọn, nút lưu ghim dưới đáy.
 4. Đã thử trên giả lập: nâng DB v2 -> v3 giữ nguyên task cũ, không lỗi.
 
+
+### Giai đoạn 7: Nhắc việc, nâng version, chỉnh Add task (2026-10-28) [HOÀN THÀNH, chưa push]
+1. **Nhắc việc:** ở Add task có mục "Remind me" chọn nhanh (Không nhắc, 15 phút, 30 phút, 1 giờ, 3 giờ, 9:00 sáng mai). Mốc nhắc được lưu vào `dueDate`. `TaskViewModel` đặt alarm khi thêm/sửa/khôi phục và hủy khi hoàn thành/xóa (qua `ReminderScheduler`). `ReminderRestoreReceiver` đặt lại alarm sau khởi động lại máy và sau khi cập nhật app. Xin quyền `POST_NOTIFICATIONS` khi chọn mốc nhắc; có nút mở cài đặt quyền báo thức chính xác (Android 14+ mặc định chặn, khi đó alarm có thể trễ vài phút).
+2. **Nâng version:** `versionCode` 1 -> 10100, `versionName` 1.1.0 (quy ước major*10000 + minor*100 + patch). Mọi bản trước đều có `versionCode = 1`. DB đã từng ở "version 1" với hai dạng khóa chính (trước và sau 2025-10-20) nhưng cùng cột, nên `MIGRATION_1_2` + `MIGRATION_2_3` đủ. Đã thử nâng cấp từ DB version 1 dạng cũ nhất trên giả lập: dữ liệu giữ nguyên.
+3. **Add task:** nút lưu dùng màu đậm hơn (`QuadrantType.buttonColor`) để góc "Don't Do" không giống bị vô hiệu hóa; ô tên dùng `BasicTextField` nên thẳng lề với tiêu đề.
+
+**Lưu ý phát hành:** bản cập nhật chỉ cài đè được nếu ký bằng cùng keystore với bản đã cài trên máy người dùng; build release hiện chưa cấu hình `signingConfig`. Mỗi bản phát hành sau phải tăng `versionCode`.
+
 ---
 
 ## 4. Kế hoạch Xác minh (Verification)

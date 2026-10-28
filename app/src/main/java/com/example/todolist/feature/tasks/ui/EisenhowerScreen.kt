@@ -270,7 +270,7 @@ fun getTaskViewModel(): TaskViewModel {
     val context = LocalContext.current
     val application = context.applicationContext as TodoApplication
     return viewModel(
-        factory = TaskViewModelFactory(application.repository)
+        factory = TaskViewModelFactory(application.repository, application.reminderScheduler)
     )
 }
 

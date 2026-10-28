@@ -48,3 +48,12 @@ val QuadrantType.icon: ImageVector
         QuadrantType.DELEGATE -> Icons.Default.Groups
         QuadrantType.DONT_DO -> Icons.Default.Block
     }
+
+/** Stronger shade of [color] for filled buttons, so even the grey quadrant reads as enabled. */
+val QuadrantType.buttonColor: Color
+    get() = when (this) {
+        QuadrantType.DO_FIRST -> Color(0xFFFF8A80)
+        QuadrantType.SCHEDULE -> Color(0xFF4FC3F7)
+        QuadrantType.DELEGATE -> Color(0xFFFFB74D)
+        QuadrantType.DONT_DO -> Color(0xFF90A4AE)
+    }

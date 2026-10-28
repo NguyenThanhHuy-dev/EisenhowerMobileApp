@@ -41,7 +41,7 @@
     <string name="overdue">Quá hạn</string>
     <string name="task_reminder_channel">Nhắc nhở công việc</string>
     <string name="task_reminder_desc">Thông báo nhắc nhở khi đến hạn công việc</string>
-    <string name="task_reminder_due_now">Đã đến hạn chót công việc!</string>
+    <string name="task_reminder_due_now">Việc này vẫn chưa hoàn thành</string>
     <string name="add_to_quadrant">Thêm việc vào %1$s</string>
     <string name="completed_at">Hoàn thành lúc %1$s</string>
     <string name="hint_do_first">Quan trọng · Khẩn cấp</string>
@@ -51,4 +51,14 @@
     <string name="new_task">Việc mới</string>
     <string name="what_needs_doing">Bạn cần làm gì?</string>
     <string name="priority">Mức ưu tiên</string>
+    <string name="reminder_title">Nhắc tôi</string>
+    <string name="reminder_none">Không nhắc</string>
+    <string name="reminder_15_min">15 phút</string>
+    <string name="reminder_30_min">30 phút</string>
+    <string name="reminder_1_hour">1 giờ</string>
+    <string name="reminder_3_hours">3 giờ</string>
+    <string name="reminder_tomorrow">9:00 sáng mai</string>
+    <string name="reminder_summary">Sẽ nhắc lúc %1$s nếu việc này chưa hoàn thành</string>
+    <string name="reminder_may_be_late">Thông báo có thể đến trễ vài phút</string>
+    <string name="reminder_allow_exact">Bật chính xác</string>
 </resources>
