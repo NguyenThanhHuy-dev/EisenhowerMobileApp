@@ -42,4 +42,5 @@
     <string name="task_reminder_channel">Nhắc nhở công việc</string>
     <string name="task_reminder_desc">Thông báo nhắc nhở khi đến hạn công việc</string>
     <string name="task_reminder_due_now">Đã đến hạn chót công việc!</string>
+    <string name="add_to_quadrant">Thêm việc vào %1$s</string>
 </resources>

@@ -42,4 +42,5 @@
     <string name="task_reminder_channel">Task Reminders</string>
     <string name="task_reminder_desc">Notifications for task deadlines</string>
     <string name="task_reminder_due_now">Task deadline is now!</string>
+    <string name="add_to_quadrant">Add task to %1$s</string>
 </resources>

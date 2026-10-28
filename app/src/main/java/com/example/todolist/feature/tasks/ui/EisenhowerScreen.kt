@@ -58,7 +58,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.todolist.R
 import com.example.todolist.TodoApplication
-import com.example.todolist.core.theme.DarkBackground
 import com.example.todolist.feature.tasks.QuadrantType
 import com.example.todolist.feature.tasks.TaskViewModel
 import com.example.todolist.feature.tasks.TaskViewModelFactory
@@ -71,7 +70,7 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EisenhowerScreen(
-    onAddTask: () -> Unit,
+    onAddTask: (important: Boolean, urgent: Boolean) -> Unit,
     onViewFinishedTasks: () -> Unit,
     modifier: Modifier = Modifier,
     onTaskClick: (Long) -> Unit,
@@ -124,6 +123,7 @@ fun EisenhowerScreen(
             onTaskClick = onTaskClick,
             onTaskChecked = onTaskChecked,
             onDeleteTask = onDeleteWithUndo,
+            onAddClick = { onAddTask(type.isImportant, type.isUrgent) },
             modifier = panelModifier,
             backgroundColor = type.color
         )
@@ -145,14 +145,14 @@ fun EisenhowerScreen(
                             modifier = Modifier
                                 .size(36.dp)
                                 .clip(CircleShape)
-                                .border(1.dp, Color.White, CircleShape)
+                                .border(1.dp, MaterialTheme.colorScheme.onBackground, CircleShape)
                                 .clickable(onClick = pickAvatar)
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Text(
                             text = getGreeting(context),
                             style = MaterialTheme.typography.titleLarge,
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 },
@@ -166,7 +166,7 @@ fun EisenhowerScreen(
                         Icon(
                             imageVector = if (isGridView) Icons.AutoMirrored.Filled.ViewList else Icons.Default.GridView,
                             contentDescription = stringResource(if (isGridView) R.string.tab_view else R.string.grid_view),
-                            tint = Color.White
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 },
@@ -177,12 +177,12 @@ fun EisenhowerScreen(
         },
         bottomBar = {
             MyBottomBar(
-                onAddTaskClick = onAddTask,
+                onAddTaskClick = { onAddTask(false, false) },
                 onFinishedTasksClick = onViewFinishedTasks,
                 onChangeBackgroundClick = pickBackground
             )
         },
-        containerColor = DarkBackground
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Box(modifier = Modifier.fillMaxSize()) {
             AsyncImage(
@@ -190,12 +190,7 @@ fun EisenhowerScreen(
                 contentDescription = stringResource(R.string.background),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
-                alpha = 0.25f
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(DarkBackground.copy(alpha = 0.55f))
+                alpha = 0.15f
             )
 
             Column(
@@ -215,7 +210,7 @@ fun EisenhowerScreen(
                     ScrollableTabRow(
                         selectedTabIndex = pagerState.currentPage,
                         containerColor = Color.Transparent,
-                        contentColor = Color.White,
+                        contentColor = MaterialTheme.colorScheme.onBackground,
                         edgePadding = 12.dp,
                         indicator = { tabPositions ->
                             if (pagerState.currentPage < tabPositions.size) {
@@ -233,7 +228,7 @@ fun EisenhowerScreen(
                                 text = {
                                     Text(
                                         text = stringResource(type.titleRes),
-                                        color = if (pagerState.currentPage == index) type.color else Color.White.copy(alpha = 0.7f)
+                                        color = if (pagerState.currentPage == index) type.color else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
                                     )
                                 }
                             )

@@ -43,12 +43,14 @@ import com.example.todolist.core.audio.SoundPlayer
 fun AddTaskScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: TaskViewModel
+    viewModel: TaskViewModel,
+    initialImportant: Boolean = false,
+    initialUrgent: Boolean = false
 ) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
-    var isImportant by remember { mutableStateOf(false) }
-    var isUrgent by remember { mutableStateOf(false) }
+    var isImportant by remember { mutableStateOf(initialImportant) }
+    var isUrgent by remember { mutableStateOf(initialUrgent) }
 
     Scaffold(
         topBar = {

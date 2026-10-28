@@ -24,7 +24,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,7 +45,7 @@ fun FinishedTasksScreen(
     viewModel: TaskViewModel,
     onTaskClick: (Long) -> Unit
 ) {
-    val tasks by viewModel.completedTasks.collectAsState(initial = emptyList())
+    val tasks by viewModel.completedTasks.collectAsStateWithLifecycle(initialValue = emptyList())
     var showClearDialog by remember { mutableStateOf(false) }
 
     if (showClearDialog) {

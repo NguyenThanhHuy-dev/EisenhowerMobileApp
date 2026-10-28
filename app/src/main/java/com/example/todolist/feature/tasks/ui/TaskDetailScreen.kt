@@ -21,7 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,7 +41,7 @@ fun TaskDetailScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val taskState by viewModel.getTaskById(taskId).collectAsState(initial = null)
+    val taskState by viewModel.getTaskById(taskId).collectAsStateWithLifecycle(initialValue = null)
 
     taskState?.let { task ->
         var title by remember(task.title) { mutableStateOf(task.title) }

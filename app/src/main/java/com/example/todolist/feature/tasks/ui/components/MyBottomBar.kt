@@ -29,7 +29,7 @@ fun MyBottomBar(
     // Sử dụng BottomAppBar để có ngữ nghĩa đúng hơn
     BottomAppBar(
         containerColor = Color.Transparent, // Nền trong suốt
-        contentColor = Color.White,
+        contentColor = MaterialTheme.colorScheme.onBackground,
         actions = {
             Row(
                 modifier = Modifier.fillMaxWidth(),

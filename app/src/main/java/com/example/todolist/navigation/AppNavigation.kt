@@ -25,16 +25,26 @@ fun EisenhowerNavigation() {
         composable("eisenhower") {
             EisenhowerScreen(
                 viewModel = taskViewModel,
-                onAddTask = { navController.navigate("addTask") },
+                onAddTask = { important, urgent ->
+                    navController.navigate("addTask?important=$important&urgent=$urgent")
+                },
                 onViewFinishedTasks = { navController.navigate("finishedTasks") },
                 onTaskClick = { taskId ->
                     navController.navigate("taskDetail/$taskId")
                 }
             )
         }
-        composable("addTask") {
+        composable(
+            route = "addTask?important={important}&urgent={urgent}",
+            arguments = listOf(
+                navArgument("important") { type = NavType.BoolType; defaultValue = false },
+                navArgument("urgent") { type = NavType.BoolType; defaultValue = false }
+            )
+        ) { backStackEntry ->
             AddTaskScreen(
                 viewModel = taskViewModel,
+                initialImportant = backStackEntry.arguments?.getBoolean("important") ?: false,
+                initialUrgent = backStackEntry.arguments?.getBoolean("urgent") ?: false,
                 onBack = { navController.popBackStack() }
             )
         }

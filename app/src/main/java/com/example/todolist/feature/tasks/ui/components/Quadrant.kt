@@ -17,8 +17,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AssignmentTurnedIn
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,10 +30,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.todolist.R
-import com.example.todolist.feature.tasks.data.Task
 import com.example.todolist.core.audio.SoundPlayer
+import com.example.todolist.feature.tasks.data.Task
 
 @Composable
 fun Quadrant(
@@ -40,48 +41,61 @@ fun Quadrant(
     onTaskClick: (Long) -> Unit,
     onTaskChecked: (Task, Boolean) -> Unit,
     onDeleteTask: (Task) -> Unit,
+    onAddClick: () -> Unit,
     modifier: Modifier = Modifier,
     backgroundColor: Color
 ) {
+    val shape = RoundedCornerShape(16.dp)
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(6.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .background(backgroundColor.copy(alpha = 0.55f))
-            .border(
-                width = 1.dp,
-                color = Color.White.copy(alpha = 0.25f),
-                shape = RoundedCornerShape(16.dp)
-            )
+            .clip(shape)
+            .background(backgroundColor.copy(alpha = 0.22f))
+            .border(width = 1.dp, color = backgroundColor.copy(alpha = 0.6f), shape = shape)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+                .padding(start = 12.dp, top = 4.dp, bottom = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            Box(
+                modifier = Modifier
+                    .size(10.dp)
+                    .clip(CircleShape)
+                    .background(backgroundColor)
+            )
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
-                color = Color.White,
-                modifier = Modifier.weight(1f)
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 8.dp)
             )
 
             if (tasks.isNotEmpty()) {
                 Box(
                     modifier = Modifier
                         .clip(CircleShape)
-                        .background(Color.White.copy(alpha = 0.3f))
+                        .background(backgroundColor.copy(alpha = 0.45f))
                         .padding(horizontal = 8.dp, vertical = 2.dp)
                 ) {
                     Text(
                         text = tasks.size.toString(),
-                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
-                        color = Color.White
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
+            }
+
+            IconButton(onClick = onAddClick, modifier = Modifier.size(40.dp)) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = stringResource(R.string.add_to_quadrant, title),
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
             }
         }
 
@@ -100,13 +114,13 @@ fun Quadrant(
                         imageVector = Icons.Default.AssignmentTurnedIn,
                         contentDescription = null,
                         modifier = Modifier.size(28.dp),
-                        tint = Color.White.copy(alpha = 0.4f)
+                        tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = stringResource(R.string.no_tasks_in_quadrant),
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.White.copy(alpha = 0.6f)
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )
                 }
             }
@@ -122,13 +136,15 @@ fun Quadrant(
                         onClick = { onTaskClick(task.id) },
                         onCheckedChange = { checked ->
                             onTaskChecked(task, checked)
-                            if (checked) {
-                                SoundPlayer.playFinishSound()
-                            }
+                            if (checked) SoundPlayer.playFinishSound()
                         },
                         onDelete = {
                             onDeleteTask(task)
                             SoundPlayer.playDeleteSound()
+                        },
+                        onSwipeComplete = {
+                            onTaskChecked(task, true)
+                            SoundPlayer.playFinishSound()
                         }
                     )
                 }
